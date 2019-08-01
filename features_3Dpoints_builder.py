@@ -8,6 +8,8 @@ import os
 import math
 
 database_dir = sys.argv[1]
+image_retrieval_result_file = sys.argv[2]
+query_image_name = sys.argv[3]
 
 IS_PYTHON3 = sys.version_info[0] >= 3
 
@@ -28,8 +30,6 @@ def truncate(f, n):
 
 db = COLMAPDatabase.connect(database_dir+"/database.db")
 
-# manually enter the id by looking up one of a similar image in the db
-image_retrieval_result_file = 'image_retrieval_result.txt'
 f = open(image_retrieval_result_file, 'r')
 lines = f.readlines()
 image_retrieval_result = lines[0].split("\n")[0] + ".JPG"
@@ -77,8 +77,7 @@ keypoints_xy_descriptors_3DpointId = np.concatenate((keypoints_xy_descriptors, n
 keypoints_xy_descriptors_3DpointId = keypoints_xy_descriptors_3DpointId.astype(float)
 # each row: the 2D point and its SIFT descriptor and its 3D point id
 # each 2D point has one 3D point or none (-1)
-np.savetxt("keypoints_xy_descriptors_3DpointId.txt", keypoints_xy_descriptors_3DpointId)
-sio.savemat('keypoints_xy_descriptors_3DpointId.mat', { 'value' : keypoints_xy_descriptors_3DpointId })
+np.savetxt("results/"+query_image_name+"/keypoints_xy_descriptors_3DpointId.txt", keypoints_xy_descriptors_3DpointId)
 
 # these are the 3Dpoints of the sparse model
 points3D = np.empty((0, 4))
@@ -98,6 +97,5 @@ for i in range(len(lines)):
 
 points3D = np.reshape(points3D, [np.shape(points3D)[0]/4,4])
 points3D = points3D.astype(float)
-np.savetxt("points3D.txt", points3D)
-sio.savemat('points3D.mat', { 'value' : points3D })
+np.savetxt("results/"+query_image_name+"/points3D.txt", points3D)
 

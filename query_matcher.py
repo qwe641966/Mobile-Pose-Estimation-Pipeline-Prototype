@@ -9,6 +9,7 @@ import math
 
 database_dir = sys.argv[1]
 data_dir = sys.argv[2]
+query_image_name = sys.argv[3]
 
 IS_PYTHON3 = sys.version_info[0] >= 3
 
@@ -50,8 +51,8 @@ descs_rows = np.shape(query_image_descriptors_data)[0]/128
 query_image_descriptors_data = query_image_descriptors_data.reshape([descs_rows,128])
 
 query_keypoints_xy_descriptors = np.concatenate((query_image_keypoints_data_xy, query_image_descriptors_data), axis=1)
-query_keypoints_xy = query_keypoints_xy_descriptors[:,0:2]
-sio.savemat('query_keypoints_xy.mat', { 'value' : query_keypoints_xy }) # 2d point coordinates for SOFTPosit
+# query_keypoints_xy = query_keypoints_xy_descriptors[:,0:2]
+# sio.savemat('query_keypoints_xy.mat', { 'value' : query_keypoints_xy }) # 2d point coordinates for SOFTPosit
 
 closest_image_filename_cursor = db.execute("SELECT name FROM images WHERE image_id = "+ "'" + query_image_id + "'")
 closest_image_filename = closest_image_filename_cursor.fetchone()[0]
@@ -61,7 +62,8 @@ closest_camera_id = closest_image_id_cursor.fetchone()[0]
 closest_camera_parameters = db.execute("SELECT params FROM cameras WHERE camera_id = " + "'" + str(closest_camera_id) + "'" )
 closest_camera_parameters = blob_to_array(closest_camera_parameters.fetchone()[0], np.float64)
 closest_camera_parameters = np.array(closest_camera_parameters)
-sio.savemat('camera_intrinsics.mat', { 'value' : closest_camera_parameters })
+
+sio.savemat("results/"+query_image_name+"/camera_intrinsics.mat", { 'value' : closest_camera_parameters })
 
 images_text_file = data_dir+"/sparse_model/images.txt"
 f = open(images_text_file, 'r')
@@ -89,16 +91,16 @@ ty = image_first_line[6]
 tz = image_first_line[7]
 
 quarternion = np.array([qw, qx, qy, qz])
-sio.savemat('colmap_rot.mat', { 'value' : quarternion })
+sio.savemat("results/"+query_image_name+"/colmap_rot.mat", { 'value' : quarternion })
 trans = np.array([tx, ty, tz])
-sio.savemat('colmap_trans.mat', { 'value' : trans })
+sio.savemat("results/"+query_image_name+"/colmap_trans.mat", { 'value' : trans })
 
 # the code below is for RANSAC applications - it will return the correspondences 2D - 3D points
 
 query_keypoints_descriptors = query_keypoints_xy_descriptors[:,2:130]
 
 #3D data and stuff from closest dataset image
-keypoints_xy_descriptors_3DpointId = np.loadtxt(open('keypoints_xy_descriptors_3DpointId.txt', 'rb'))
+keypoints_xy_descriptors_3DpointId = np.loadtxt(open("results/"+query_image_name+"/keypoints_xy_descriptors_3DpointId.txt", 'rb'))
 
 points3Dids = keypoints_xy_descriptors_3DpointId[:,130]
 # use the ones that only have a 3D point
@@ -120,7 +122,7 @@ for m,n in matches:
     if m.distance < 0.75 * n.distance:
         good.append([m])
 
-points3D = np.loadtxt(open('points3D.txt', 'rb')) #list of [id, x, y, z]
+points3D = np.loadtxt(open("results/"+query_image_name+"/points3D.txt", 'rb')) #list of [id, x, y, z]
 query_image_final_points = np.empty((0, 2))
 final_points3D = np.empty((0, 2))
 final_match_array = np.empty((0, 5))
@@ -142,8 +144,8 @@ query_image_final_points = np.reshape(query_image_final_points,[np.shape(query_i
 final_points3D = np.reshape(final_points3D,[np.shape(final_points3D)[0]/3,3])
 final_match_array = np.concatenate((query_image_final_points, final_points3D), axis=1)
 
-np.savetxt("final_match_array.txt", final_match_array)
-sio.savemat('final_match_array.mat', { 'value' : final_match_array })
+np.savetxt("results/"+query_image_name+"/final_match_array.txt", final_match_array)
+sio.savemat("results/"+query_image_name+"/final_match_array.mat", { 'value' : final_match_array })
 
 focalLength = closest_camera_parameters[0]
 cx = closest_camera_parameters[1]
@@ -155,5 +157,5 @@ camera_matrix = np.array([  [focalLength,      0,       center[0]],
 
 (_, pnp_ransac_rotation_vector, pnp_ransac_translation_vector, inliers) = cv2.solvePnPRansac(final_points3D, query_image_final_points, camera_matrix, None, flags = cv2.SOLVEPNP_EPNP)
 
-sio.savemat('pnp_ransac_rotation_vector.mat', { 'value' : pnp_ransac_rotation_vector })
-sio.savemat('pnp_ransac_translation_vector.mat', { 'value' : pnp_ransac_translation_vector })
+sio.savemat("results/"+query_image_name+"/pnp_ransac_rotation_vector.mat", { 'value' : pnp_ransac_rotation_vector })
+sio.savemat("results/"+query_image_name+"/pnp_ransac_translation_vector.mat", { 'value' : pnp_ransac_translation_vector })
