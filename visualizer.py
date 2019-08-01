@@ -5,7 +5,7 @@ import sys
 import scipy.io as sio
 import os
 
-query_image = sys.argv[1]
+query_image_path = sys.argv[1]
 
 points_correspondences = sio.loadmat('final_match_array.mat')
 points_correspondences = points_correspondences['value']
@@ -41,7 +41,7 @@ points2D_projected = np.round(points2D_projected)
 points2D_projected = points2D_projected[:,0:2]
 
 rows = np.shape(points2D_projected)[0]
-img = cv2.imread("query_image/"+query_image)
+img = cv2.imread(query_image_path)
 
 for i in range(rows):
     x = int(points2D_projected[i][0])

@@ -8,6 +8,7 @@ import os
 import math
 
 database_dir = sys.argv[1]
+data_dir = sys.argv[2]
 
 IS_PYTHON3 = sys.version_info[0] >= 3
 
@@ -26,7 +27,7 @@ def blob_to_array(blob, dtype, shape=(-1,)):
 def truncate(f, n):
     return math.floor(f * 10 ** n) / 10 ** n
 
-db = COLMAPDatabase.connect(database_dir+"/database.db")
+db = COLMAPDatabase.connect(database_dir)
 
 #Note: the sift features should be extracted from COLMAP so they match the ones from the SFM dataset
 
@@ -62,7 +63,7 @@ closest_camera_parameters = blob_to_array(closest_camera_parameters.fetchone()[0
 closest_camera_parameters = np.array(closest_camera_parameters)
 sio.savemat('camera_intrinsics.mat', { 'value' : closest_camera_parameters })
 
-images_text_file = "sparse_model/images.txt"
+images_text_file = data_dir+"/sparse_model/images.txt"
 f = open(images_text_file, 'r')
 lines = f.readlines()
 lines = lines[4:] #skip comments
