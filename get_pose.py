@@ -7,6 +7,7 @@ query_image_arg = sys.argv[2] # i.e IMG_7932.JPG
 query_image_arg_no_ext = query_image_arg.split(".")[0]
 data_dir = sys.argv[3] # i.e data/coop3
 
+os.system("mkdir results/")
 os.system("mkdir results/"+query_image_arg_no_ext)
 
 if(build_retrieval_database == '1'):

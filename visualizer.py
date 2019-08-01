@@ -8,8 +8,7 @@ import os
 query_image_path = sys.argv[1]
 query_image_name = query_image_path.rsplit("/",1)[1].split(".")[0]
 
-
-points_correspondences = sio.loadmat("results/"+query_image_name+"/final_match_array.txt")
+points_correspondences = sio.loadmat("results/"+query_image_name+"/final_match_array.mat")
 points_correspondences = points_correspondences['value']
 
 points2D = points_correspondences[:,0:2]
@@ -51,5 +50,5 @@ for i in range(rows):
     center = (np.shape(img)[1]-y,x) # weird matlab to python indexing..
     cv2.circle(img, center, 10, (0, 0, 255), -1)
 
-cv2.imwrite('result.png',img)
-os.system("results/"+query_image_name+"_result.png")
+cv2.imwrite("results/" + query_image_name + "_result.png",img)
+os.system("open results/" + query_image_name + "_result.png")

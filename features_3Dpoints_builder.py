@@ -6,6 +6,7 @@ import cv2
 import scipy.io as sio
 import os
 import math
+import pdb
 
 database_dir = sys.argv[1]
 image_retrieval_result_file = sys.argv[2]
@@ -30,7 +31,7 @@ def truncate(f, n):
 
 db = COLMAPDatabase.connect(database_dir+"/database.db")
 
-f = open(image_retrieval_result_file, 'r')
+f = open("results/"+query_image_name+"/"+image_retrieval_result_file, 'r')
 lines = f.readlines()
 image_retrieval_result = lines[0].split("\n")[0] + ".JPG"
 
