@@ -7,6 +7,14 @@ import scipy.io as sio
 import os
 import math
 
+# This file will return the camera intrinsics of the query image and also the
+# initial rotation and translation from the similar image to the query image in the database.
+#
+# if RANSAC is used then it will apply SIFT matching between the sift features of the
+# query image and the similar image. Then the final array will be a correspondences array
+# between the 2D points of the query image and 3D points (that were fetched from the similar image - that already had
+# the 3D points data from COLMAP)
+
 database_dir = sys.argv[1]
 data_dir = sys.argv[2]
 query_image_name = sys.argv[3]
@@ -51,8 +59,8 @@ descs_rows = np.shape(query_image_descriptors_data)[0]/128
 query_image_descriptors_data = query_image_descriptors_data.reshape([descs_rows,128])
 
 query_keypoints_xy_descriptors = np.concatenate((query_image_keypoints_data_xy, query_image_descriptors_data), axis=1)
-# query_keypoints_xy = query_keypoints_xy_descriptors[:,0:2]
-# sio.savemat('query_keypoints_xy.mat', { 'value' : query_keypoints_xy }) # 2d point coordinates for SOFTPosit
+points2D_for_softposit = query_keypoints_xy_descriptors[:,0:2]
+sio.savemat("results/"+query_image_name+"/points2D_for_softposit.mat", { 'value' : points2D_for_softposit })
 
 closest_image_filename_cursor = db.execute("SELECT name FROM images WHERE image_id = "+ "'" + query_image_id + "'")
 closest_image_filename = closest_image_filename_cursor.fetchone()[0]
@@ -71,7 +79,7 @@ lines = f.readlines()
 lines = lines[4:] #skip comments
 f.close()
 
-closest_image_id = 10 # this will have to be automatically acquired from an image retrieval system!!
+closest_image_id = 10 # this will have to be automatically acquired from an image retrieval system!! TODO: WRONG!!!
 for i in range(0,len(lines),2):
     if (lines[i].split(" ")[0] == str(closest_image_id)):
         image_first_line = lines[i] # IMAGE_ID, QW, QX, QY, QZ, TX, TY, TZ, CAMERA_ID, NAME
@@ -96,7 +104,6 @@ trans = np.array([tx, ty, tz])
 sio.savemat("results/"+query_image_name+"/colmap_trans.mat", { 'value' : trans })
 
 # the code below is for RANSAC applications - it will return the correspondences 2D - 3D points
-
 query_keypoints_descriptors = query_keypoints_xy_descriptors[:,2:130]
 
 #3D data and stuff from closest dataset image

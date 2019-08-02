@@ -8,6 +8,12 @@ import os
 import math
 import pdb
 
+# This script should return the closest retrieval image 2D points and their 3D point id,
+# such that each row is [x, y, 128-descriptor, 3DpointId].
+# and also a seperate file with the actual all the model 3D points values
+# such that each row is [3DpointId, x, y, z]
+# Note: Only uses the query name to save results..
+
 database_dir = sys.argv[1]
 image_retrieval_result_file = sys.argv[2]
 query_image_name = sys.argv[3]
@@ -100,3 +106,8 @@ points3D = np.reshape(points3D, [np.shape(points3D)[0]/4,4])
 points3D = points3D.astype(float)
 np.savetxt("results/"+query_image_name+"/points3D.txt", points3D)
 
+# SOFTPosit Data
+points3Dids = np.where(points3Dids != -1)[0]
+points_3D_indices = np.where(np.in1d(points3D[:,0], points3Dids))[0]
+points3D_for_softposit = points3D[points_3D_indices]
+sio.savemat("results/"+query_image_name+"/points3D_for_softposit.mat", { 'value' : points3D_for_softposit })

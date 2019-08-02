@@ -1,5 +1,6 @@
 import os
 import sys
+import pdb
 
 data_dir = sys.argv[1]
 query_image_filename = sys.argv[2]

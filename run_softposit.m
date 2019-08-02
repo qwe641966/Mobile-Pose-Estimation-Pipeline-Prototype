@@ -1,0 +1,6 @@
+
+
+
+[SOFTPosit_rot, SOFTPosit_trans, assignMat, projWorldPts, foundPose, stats] = ...
+    softPosit(point2DSOFTPosit, imageAdj, point3DSOFTPosit, worldAdj, 2.0e-04, 0, ...
+                 colmap_rot, colmap_trans, focalLength, dispLevel, kickout, center);
