@@ -12,6 +12,7 @@ os.system("mkdir results/"+query_image_arg_no_ext)
 
 if(build_retrieval_database == '1'):
     print "Creating retrieval database"
+    os.system("rm -rf "+data_dir+"/model_images_vocab_out")
     os.system("python2.7 image_retrieval_database_creation.py "+data_dir+"/model_images")
 
 print "Running script 1/5"
