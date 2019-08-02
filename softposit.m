@@ -14,16 +14,16 @@
 %     Army Research Laboratory        University of Maryland
 %     ATTN: AMSRL-CI-CB               Dept. of Computer Science
 %     Adelphi, MD 20783               College Park, MD 20742
-% 
+%
 % Copyright 2003, University of Maryland, Army Research Lab, Daniel DeMenthon and Philip David
-% 
+%
 % This program is available under the terms of the GNU General Public License
 % as published by the Free Software Foundation.
 % See the GNU General Public License for more details: http://www.gnu.org/copyleft/gpl.html
 %
-% You are free to use this program for non-commercial purpose.              
-% If you plan to use this code in commercial applications, 
-% you need additional licensing: 
+% You are free to use this program for non-commercial purpose.
+% If you plan to use this code in commercial applications,
+% you need additional licensing:
 % please contact daniel@cfar.umd.edu or phild@arl.army.mil
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -33,21 +33,21 @@
 %    [rot, trans, assignMat, projWorldPts, foundPose, stats] = ...
 %        softPosit(imagePts, imageAdj, worldPts, worldAdj, beta0, noiseStd, ...
 %                  initRot, initTrans, focalLength, dispLevel, kickout, center)
-%     
+%
 %
 % Given a set of 3D world points and a set of 2D image points, determine the
 % rotation and translation (the pose) of the world points that best aligns
 % the projected world points with the image points.  Correspondences between
 % the world and image points are not known.  The set of image points may
 % include spurious and missing data (due to clutter and occlusion).
-% 
+%
 % The registration is computed using the SoftPOSIT algorithm, which is
 % an iterative algorithm combining the POSIT and SoftAssign algorithms.
 % For a technical description of the algorithm, see [D. DeMenthon and
 % P. David, "SoftPOSIT: An Algorithm for Registration of 3D Models to Noisy
 % Perspective Images Combining SoftAssign and POSIT," Univ.  of Maryland
 % Center for Automation Research Technical Report CAR-TR-970, May 2001].
-% 
+%
 % INPUTS:
 %     IMAGEPTS is an M x 2 matrix of the x and y coordinates of a set of
 % M (M >= 3) image points.
@@ -113,11 +113,11 @@
 % image points in IMAGEPTS are normalized with respect to CENTER.  If not
 % given, then this routine assumes that the image points have already been
 % normalizied with respect to this center point.
-% 
+%
 % OUTPUTS:
 %     ROT returns the 3 x 3 rotation matrix of the object.  The computed pose
 % of the object is defined by ROT and TRANS.
-%     TRANS returns the 3-vector translation of the object. 
+%     TRANS returns the 3-vector translation of the object.
 %     ASSIGNMAT returns the assignments of image points to world points.
 % ASSIGNMAT is an (M+1) x (N+1) matrix such that image point J corresponds
 % to world point K if ASSIGNMAT(J,K) is maximal in row J and column K.
@@ -136,9 +136,9 @@
 % of iterations for which softPOSIT ran.  See the code for the exact values
 % returned in this matrix.  This information is probably only useful for
 % learning the thresholds to use in the early termination test.
-% 
+%
 % EXAMPLE USAGE:
-%     This is an example of softPOSIT registering an image of a cube (in 
+%     This is an example of softPOSIT registering an image of a cube (in
 % which one cube vertex is not visible) to a 3D model of the cube.
 % In this example, the internal paramter betaUpdate was set to 1.05.
 % The pose of the cube that was used to generate the image points is:
@@ -190,15 +190,15 @@
 %            DISPLEVEL = 5;
 %            KICKOUT.numMatchable = 7;
 %            KICKOUT.rthldfbeta = zeros(1,200);
-% 
+%
 %        EXECUTION:
-%            SoftPOSIT runs for 42 iterations.  The message displayed on the 
+%            SoftPOSIT runs for 42 iterations.  The message displayed on the
 %            final iteration is the following:
-%                betaCount = 42, beta = 0.0015523, delta = 0.86674, 
+%                betaCount = 42, beta = 0.0015523, delta = 0.86674,
 %                poseConverged = 1, numMatchPts = 7, sumNonslack = 5.0256
 %            On the final iteration, the projected world points exactly overlay
 %            the image points.
-% 
+%
 %        OUTPUTS:
 %            ROT = [   0.9692    0.0567   -0.2395;
 %                     -0.1879    0.7990   -0.5712;
@@ -264,7 +264,7 @@ stats = [];
 % chi-squared distribution with 2 degrees of freedom.  Thus, to ensure
 % with probability 0.99 that a measured point is allowed to match to a
 % true point, we should take alpha = 9.21*noiseStd^2. See Hartley &
-% Zisserman, Multiple View Geometry, p. 103 & p. 550.  A value of 1 is 
+% Zisserman, Multiple View Geometry, p. 103 & p. 550.  A value of 1 is
 % added to this to account for possible roundoff errors.
 alpha = 9.21*noiseStd^2 + 1;
 
@@ -306,15 +306,15 @@ end
 % Initialize the depths of all world points based on initial pose.
 wk = homogeneousWorldPts * [rot(3,:)/trans(3), 1]';
 
-% Draw a picture of the model on the original image plane.
-projWorldPts = proj3dto2d(worldPts, rot, trans, focalLength, 1, center);
-if ismember(dispLevel,[4,5,6])
-    % plotImages(imagePts, imageAdj, projWorldPts, worldAdj);
-    plot2dPts(imagePts, 'r.-', 'FigNum', 1, 'AdjMat', imageAdj, ...
-              'Name', 'Original image', 'Axis', 300);
-    plot2dPts(projWorldPts, 'b.-', 'Overlay', 'AdjMat', worldAdj, ...
-              'Name', 'Projected model', 'Axis', 'Freeze');
-end
+% % Draw a picture of the model on the original image plane.
+% projWorldPts = proj3dto2d(worldPts, rot, trans, focalLength, 1, center);
+% if ismember(dispLevel,[4,5,6])
+%     % plotImages(imagePts, imageAdj, projWorldPts, worldAdj);
+%     plot2dPts(imagePts, 'r.-', 'FigNum', 1, 'AdjMat', imageAdj, ...
+%               'Name', 'Original image', 'Axis', 300);
+%     plot2dPts(projWorldPts, 'b.-', 'Overlay', 'AdjMat', worldAdj, ...
+%               'Name', 'Projected model', 'Axis', 'Freeze');
+% end
 
 % First two rows of the camera matrices (for both perspective and SOP).  Note:
 % the scale factor is s = f/Tz = 1/Tz since f = 1.  These are column 4-vectors.
@@ -373,7 +373,7 @@ while beta < betaFinal & ~assignConverged
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Use the softAssign algorithm to compute the best assignment of image to
-    % world points based on the computed distances.  The use of alpha 
+    % world points based on the computed distances.  The use of alpha
     % determines when to favor assignments instead of use of slack.
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -428,15 +428,15 @@ while beta < betaFinal & ~assignConverged
 
     % POSIT loop.  We put a cap on number of steps here, so at first it does
     % not converge.  We currently do just one iteration of POSIT.  When the
-    % annealing temperature is slow enough, one iteration of POSIT is 
+    % annealing temperature is slow enough, one iteration of POSIT is
     % sufficient since the assigments and pose will converge simultaneously.
     % while ~poseConverged & count < maxCount
 
         % Compute the term in the equation for the optimal pose vectors (M and
         % N in equations (11) and (12) in the paper) that depends on the current
         % assigment and the w[i]. These are Sum{all j,k}(m[j,k]w[k]x[j]S[k]) and
-        % Sum{all j,k}(m[j,k]w[k]y[j]S[k]).  Here, (w[k]x[j],w[k]y[j]) is our 
-        % best estimate of the SOP of the k-th scene point whose homogeneous 
+        % Sum{all j,k}(m[j,k]w[k]y[j]S[k]).  Here, (w[k]x[j],w[k]y[j]) is our
+        % best estimate of the SOP of the k-th scene point whose homogeneous
         % perspective image coordinate is (x[j],y[j]).
         weightedUi = zeros(4,1);                    % column vector
         weightedVi = zeros(4,1);                    % column vector
@@ -466,7 +466,7 @@ while beta < betaFinal & ~assignConverged
             Tx = r1T(4) * Tz;
             Ty = r2T(4) * Tz;
             r3T= [r3; Tz];
-        else 
+        else
             % Standard calculation of R and T.  The rotation matrix may not be
             % orthonormal.  The object must distort when the rotation matrix
             % is not orthonormal.
@@ -481,7 +481,7 @@ while beta < betaFinal & ~assignConverged
             r3T= [r3; Tz];                  % Column 4-vector: (R3,Tz).
             Tx = r1N(4);
             Ty = r2N(4);
-        end 
+        end
 
         % Make the pose vectors consistent with the new rotation matrix.
         % These are column 4-vectors.
@@ -514,8 +514,8 @@ while beta < betaFinal & ~assignConverged
                   ', sumNonslack = ' num2str(sumNonslack) ]);
         end
 
-        if ismember(dispLevel,[4,5,6]) 
-            pause; 
+        if ismember(dispLevel,[4,5,6])
+            pause;
         end
 
         % Save some information for use by the calling routine.
@@ -551,14 +551,14 @@ while beta < betaFinal & ~assignConverged
     foundPose = (delta < maxDelta & betaCount > minBetaCount);
 
     % Project the model onto the original (unnormalized) image plane.
-    projWorldPts = proj3dto2d(worldPts, rot, trans, focalLength, 1, center);
-    if ismember(dispLevel,[4,5,6])
-        % plotImages(imagePts, imageAdj, projWorldPts, worldAdj);
-        plot2dPts(imagePts, 'r.-', 'FigNum', 1, 'AdjMat', imageAdj, ...
-                  'Name', 'Original image');
-        plot2dPts(projWorldPts, 'b.-', 'Overlay', 'AdjMat', worldAdj, ...
-                  'Name', 'Projected model');
-    end
+    % projWorldPts = proj3dto2d(worldPts, rot, trans, focalLength, 1, center);
+    % if ismember(dispLevel,[4,5,6])
+    %     % plotImages(imagePts, imageAdj, projWorldPts, worldAdj);
+    %     plot2dPts(imagePts, 'r.-', 'FigNum', 1, 'AdjMat', imageAdj, ...
+    %               'Name', 'Original image');
+    %     plot2dPts(projWorldPts, 'b.-', 'Overlay', 'AdjMat', worldAdj, ...
+    %               'Name', 'Projected model');
+    % end
 
     % Perform the "early restart" test.
     r = numMatchPts/kickout.numMatchable;
@@ -575,12 +575,12 @@ end % of Deterministic annealing loop
 
 if poseConverged
     % Draw a picture showing the initial and final pose of the model.
-    initProjWorldPts = proj3dto2d(worldPts, initRot, initTrans, ...
-                                  focalLength, 1, center);
-    finalProjWorldPts = proj3dto2d(worldPts,rot,trans,focalLength,1,center);
-    plot2dPts(initProjWorldPts, 'g.-', 'FigNum', 5, 'AdjMat', worldAdj, ...
-              'Axis', 'Auto');
-    plot2dPts(finalProjWorldPts, 'b.-', 'Overlay', 'AdjMat', worldAdj);
+    % initProjWorldPts = proj3dto2d(worldPts, initRot, initTrans, ...
+    %                               focalLength, 1, center);
+    % finalProjWorldPts = proj3dto2d(worldPts,rot,trans,focalLength,1,center);
+    % plot2dPts(initProjWorldPts, 'g.-', 'FigNum', 5, 'AdjMat', worldAdj, ...
+    %           'Axis', 'Auto');
+    % plot2dPts(finalProjWorldPts, 'b.-', 'Overlay', 'AdjMat', worldAdj);
     plot2dPts(imagePts, 'r.', 'Overlay', 'AdjMat', imageAdj);
     axis(axis+[-50 50 -50 50]);                    % Expand the axis a little.
     set(gca,'XTick',[])
@@ -631,7 +631,7 @@ end
 % Get the principle point of the image.
 if length(varargin) >= 1
     center = varargin{1};
-    if size(center,2) ~= 1 
+    if size(center,2) ~= 1
         center = center';              % Make sure center is a column vector.
     end
 else
@@ -665,7 +665,7 @@ return
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
+%
 % DISP2DPTS   Plot a set of 2D points in a figure.
 %
 %    plot2dPts(PNTPOS, LINESPEC, [OPTIONAL_ARGS]) plots the 2D points
@@ -861,7 +861,7 @@ if newfig
         numlabeledsets{fignum,j} = 0;
         numpntsets{fignum,j} = 0;
     end
-    clf; 
+    clf;
 end
 
 if overlayfig & numpntsets{fignum,figpos} > 0
@@ -982,8 +982,8 @@ return;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
-% Normalize across rows and columns to find an assignment matrix (a 
+%
+% Normalize across rows and columns to find an assignment matrix (a
 % doubly stochastic matrix).
 %
 % This version treats the slack row and column differently from other rows
@@ -1004,24 +1004,24 @@ fEpsilon2 = 0.001; % Used in termination of Sinkhorn Loop.
 iNumSinkIter = 0;
 [nbRows, nbCols] = size(M);
 
-fMdiffSum = fEpsilon2 + 1;  % Set "difference" from last M matrix above 
+fMdiffSum = fEpsilon2 + 1;  % Set "difference" from last M matrix above
                             % the loop termination threshold.
 
 while(abs(fMdiffSum) > fEpsilon2 & iNumSinkIter < iMaxIterSinkhorn)
     Mprev = M;  % Save M from previous iteration to test for loop termination
 
-    % Col normalization (except outlier row - do not normalize col slacks 
+    % Col normalization (except outlier row - do not normalize col slacks
     % against each other)
     McolSums = sum(M, 1); % Row vector.
     McolSums(nbCols) = 1; % Don't normalize slack col terms against each other.
     McolSumsRep = ones(nbRows,1) * McolSums ;
     M = M ./ McolSumsRep;
 
-    % Row normalization (except outlier row - do not normalize col slacks 
+    % Row normalization (except outlier row - do not normalize col slacks
     % against each other)
     MrowSums = sum(M, 2); % Column vector.
     MrowSums(nbRows) = 1; % Don't normalize slack row terms against each other.
-    MrowSumsRep = MrowSums * ones(1, nbCols);   
+    MrowSumsRep = MrowSums * ones(1, nbCols);
     M = M ./ MrowSumsRep;
 
     iNumSinkIter=iNumSinkIter+1;
@@ -1036,12 +1036,12 @@ return
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
+%
 % normalizedMat = sinkhornImp(M)
 %
-% Apply an improved Sinkhorn algorithm to map matrix M to a doubly 
+% Apply an improved Sinkhorn algorithm to map matrix M to a doubly
 % stochastic matrix.
-% 
+%
 % The Sinkhorn algorithm modified for slack rows and columns treats the
 % slack row and column differently from other rows and columns: the slack
 % values are not normalized with respect to other slack values, only with
@@ -1050,7 +1050,7 @@ return
 % This is true primarily when there needs to be more than one assignment
 % to a slack row or column.  I.e., when there are two or more missing
 % image points or model points.
-% 
+%
 % A problem with this modified Sinkhorn algorithm is the following.
 % Suppose all rows except the slack row are normalized.  It is possible that
 % a nonslack value which was previously maximum in its row and column to now
@@ -1076,7 +1076,7 @@ fEpsilon2 = 0.001;            % Used in termination of Sinkhorn Loop.
 iNumSinkIter = 0;
 [nbRows, nbCols] = size(M);
 
-fMdiffSum = fEpsilon2 + 1;    % Set "difference" from last M matrix above 
+fMdiffSum = fEpsilon2 + 1;    % Set "difference" from last M matrix above
                               % the loop termination threshold
 
 % Get the positions and ratios to slack of the nonslack elements that
@@ -1086,7 +1086,7 @@ fMdiffSum = fEpsilon2 + 1;    % Set "difference" from last M matrix above
 while(abs(fMdiffSum) > fEpsilon2 & iNumSinkIter < iMaxIterSinkhorn)
     Mprev = M;  % Save M from previous iteration to test for loop termination
 
-    % Col normalization (except outlier row - do not normalize col slacks 
+    % Col normalization (except outlier row - do not normalize col slacks
     % against each other)
     McolSums = sum(M, 1);  % Row vector.
     McolSums(nbCols) = 1;  % Don't normalize slack col terms against each other.
@@ -1098,11 +1098,11 @@ while(abs(fMdiffSum) > fEpsilon2 & iNumSinkIter < iMaxIterSinkhorn)
       M(posmax(i,1),nbCols) = ratios(i,1)*M(posmax(i,1),posmax(i,2));
     end
 
-    % Row normalization (except outlier row - do not normalize col slacks 
+    % Row normalization (except outlier row - do not normalize col slacks
     % against each other)
     MrowSums = sum(M, 2);  % Column vector.
     MrowSums(nbRows) = 1;  % Don't normalize slack row terms against each other.
-    MrowSumsRep = MrowSums * ones(1, nbCols);   
+    MrowSumsRep = MrowSums * ones(1, nbCols);
     M = M ./ MrowSumsRep;
 
     % Fix values in the slack row.
