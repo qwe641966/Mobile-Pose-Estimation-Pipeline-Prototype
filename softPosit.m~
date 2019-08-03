@@ -414,7 +414,7 @@ while beta < betaFinal & ~assignConverged
                         homogeneousWorldPts(k,:)' * homogeneousWorldPts(k,:);
     end
 
-    if cond(sumSkSkT) > 1e10
+    if cond(sumSkSkT) > 5e10
         disp('sumSkSkT is ill-conditioned, termininating search.');
         return;
     end

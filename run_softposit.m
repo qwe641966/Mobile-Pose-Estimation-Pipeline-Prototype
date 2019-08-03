@@ -21,11 +21,11 @@ function [] = run_softposit(query_image_name)
     [r, c] = size(points3D);
     worldAdj = zeros(r); % r by r
     dispLevel = 0;
-    kickout.numMatchable = 1000;
-    kickout.rthldfbeta = zeros(1,500);
+    kickout.numMatchable = 3000;
+    kickout.rthldfbeta = zeros(1,2000);
     
     [SOFTPosit_rot, SOFTPosit_trans, assignMat, projWorldPts, foundPose, stats] = ...
-        softPosit(points2D, imageAdj, points3D, worldAdj, 2.0e-04, 0, ...
+        softPosit(points2D, imageAdj, points3D, worldAdj, 0.0001, 1, ...
                      colmap_rot, colmap_trans, focalLength, dispLevel, kickout, center);
 
     quit
