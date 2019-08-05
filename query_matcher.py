@@ -10,7 +10,7 @@ import math
 # This file will return the camera intrinsics of the query image and also the
 # initial rotation and translation from the similar image to the query image in the database.
 #
-# if RANSAC is used then it will apply SIFT matching between the sift features of the
+# when RANSAC is used then it will apply SIFT matching between the sift features of the
 # query image and the similar image. Then the final array will be a correspondences array
 # between the 2D points of the query image and 3D points (that were fetched from the similar image - that already had
 # the 3D points data from COLMAP)

@@ -86,7 +86,7 @@ keypoints_xy_descriptors_3DpointId = keypoints_xy_descriptors_3DpointId.astype(f
 # each 2D point has one 3D point or none (-1)
 np.savetxt("results/"+query_image_name+"/keypoints_xy_descriptors_3DpointId.txt", keypoints_xy_descriptors_3DpointId)
 
-# these are the 3Dpoints of the sparse model
+# these are the 3Dpoints of the sparse model - TODO: move this into offline processing
 points3D = np.empty((0, 4))
 points3D_text_file = database_dir+"/../sparse_model/points3D.txt"
 f = open(points3D_text_file, 'r')
