@@ -121,12 +121,22 @@ keypoints_descriptors = keypoints_descriptors.astype(np.float32)
 # and the descriptors of the closest image that its 2D features (points) have a 3D point which is a M by 128 array
 # now we need to find which ones are good matches...
 
-bf = cv2.BFMatcher()
-matches = bf.knnMatch(query_keypoints_descriptors, keypoints_descriptors, k=2)
+# Brute Force
+# bf = cv2.BFMatcher()
+# matches = bf.knnMatch(query_keypoints_descriptors, keypoints_descriptors, k=2)
+
+# ..or FLANN
+FLANN_INDEX_KDTREE = 0
+index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
+search_params = dict(checks=50)   # or pass empty dictionary
+flann = cv2.FlannBasedMatcher(index_params,search_params)
+query_keypoints_descriptors = np.ascontiguousarray(query_keypoints_descriptors)
+keypoints_descriptors = np.ascontiguousarray(keypoints_descriptors)
+matches = flann.knnMatch(query_keypoints_descriptors, keypoints_descriptors,k=2)
 
 good = []
 for m,n in matches:
-    if m.distance < 0.75 * n.distance:
+    if m.distance < 0.7 * n.distance: # or 0.75
         good.append([m])
 
 points3D = np.loadtxt(open("results/"+query_image_name+"/points3D.txt", 'rb')) #list of [id, x, y, z]
@@ -162,7 +172,7 @@ camera_matrix = np.array([  [focalLength,      0,       center[0]],
                             [0,            focalLength, center[1]],
                             [0,                 0,           1  ]], dtype = "float")
 
-(_, pnp_ransac_rotation_vector, pnp_ransac_translation_vector, inliers) = cv2.solvePnPRansac(final_points3D, query_image_final_points, camera_matrix, None, flags = cv2.SOLVEPNP_EPNP)
+(_, pnp_ransac_rotation_vector, pnp_ransac_translation_vector, inliers) = cv2.solvePnPRansac(final_points3D, query_image_final_points, camera_matrix, None, iterationsCount = 100, flags = cv2.SOLVEPNP_EPNP)
 
 sio.savemat("results/"+query_image_name+"/pnp_ransac_rotation_vector.mat", { 'value' : pnp_ransac_rotation_vector })
 sio.savemat("results/"+query_image_name+"/pnp_ransac_translation_vector.mat", { 'value' : pnp_ransac_translation_vector })
