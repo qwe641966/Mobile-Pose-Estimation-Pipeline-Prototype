@@ -8,10 +8,10 @@ import os
 import math
 import pdb
 
-# This script should return the image 2D points and their 3D point id for all model images,
-# such that each row is [x, y, 128-descriptor, 3DpointId] for each image (one image has N rows).
-# and also a seperate file with the actual all the model 3D points values
-# such that each row is [3DpointId, x, y, z]
+# This script should return a text file for each image in the SFM data 
+# that each text file's row is [SIFT desc, 2D xy, 3D xyz].
+# That is each 2D point and its 3D point corresponding along with the SIFT of that
+# 2D point
 
 database_dir = sys.argv[1]
 correspondences_dir = sys.argv[2]
@@ -57,7 +57,7 @@ images_names = db.execute("SELECT name FROM images")
 images_names = images_names.fetchall()
 
 for images_name in images_names:
-    image_id = db.execute("SELECT image_id FROM images WHERE name = "+"'"+str(images_names[0][0])+"'")
+    image_id = db.execute("SELECT image_id FROM images WHERE name = "+"'"+str(images_name[0])+"'")
     image_id = str(image_id.fetchone()[0])
     images_name = str(images_name[0]).split(".")[0]
 
@@ -120,6 +120,6 @@ for images_name in images_names:
     keypoints_xy_descriptors_3DpointId_xyz = np.concatenate((keypoints_xy_descriptors_3DpointId, all_matching_points3D), axis=1)
 
     correspondences = np.concatenate((keypoints_xy_descriptors_3DpointId_xyz[:,0:2], keypoints_xy_descriptors_3DpointId_xyz[:,131:134]), axis=1)
+    correspondences = np.concatenate((keypoints_xy_descriptors_3DpointId_xyz[:,2:130], correspondences), axis=1)
 
     np.savetxt(database_dir+"/../points_correspondences/"+images_name+"/correspondences.txt", correspondences)
-
