@@ -79,20 +79,20 @@ train_descriptors = correspondences[:,0:128]
 train_descriptors = train_descriptors.astype(np.float32) # minor formatting fix
 
 # Brute Force
-bf = cv2.BFMatcher()
-matches = bf.knnMatch(query_descriptors, train_descriptors, k=2)
+# bf = cv2.BFMatcher()
+# matches = bf.knnMatch(query_descriptors, train_descriptors, k=2)
 #
 # # ..or FLANN
-# FLANN_INDEX_KDTREE = 0
-# index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
-# search_params = dict(checks=50)   # or pass empty dictionary
-# flann = cv2.FlannBasedMatcher(index_params,search_params)
-#
-# train_descriptors = train_descriptors.astype(np.float32) # minor formatting fix
-# query_descriptors = np.ascontiguousarray(query_descriptors)
-# train_descriptors = np.ascontiguousarray(train_descriptors)
-#
-# matches = flann.knnMatch(query_descriptors, train_descriptors, k=2)
+FLANN_INDEX_KDTREE = 0
+index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
+search_params = dict(checks=50)   # or pass empty dictionary
+flann = cv2.FlannBasedMatcher(index_params,search_params)
+
+train_descriptors = train_descriptors.astype(np.float32) # minor formatting fix
+query_descriptors = np.ascontiguousarray(query_descriptors)
+train_descriptors = np.ascontiguousarray(train_descriptors)
+
+matches = flann.knnMatch(query_descriptors, train_descriptors, k=2)
 
 good = []
 for m,n in matches:
