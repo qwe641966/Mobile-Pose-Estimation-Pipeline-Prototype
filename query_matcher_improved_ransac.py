@@ -42,7 +42,7 @@ db = COLMAPDatabase.connect(query_image_database)
 #Note: the sift features should be extracted from COLMAP so they match the ones from the SFM dataset
 
 #query image stuff
-query_image_id = '1' #usually one as there is only 1
+query_image_id = '3' #usually one as there is only 1
 
 query_image_keypoints_data = db.execute("SELECT data FROM keypoints WHERE image_id = "+ "'" + query_image_id + "'")
 query_image_keypoints_data = query_image_keypoints_data.fetchone()[0]
@@ -76,32 +76,35 @@ for similar_image in similar_images_names:
 print "matching.."
 query_descriptors = query_keypoints_xy_descriptors[:,0:128]
 train_descriptors = correspondences[:,0:128]
-# Brute Force
-# bf = cv2.BFMatcher()
-# matches = bf.knnMatch(query_keypoints_descriptors, keypoints_descriptors, k=2)
-
-# ..or FLANN
-FLANN_INDEX_KDTREE = 0
-index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
-search_params = dict(checks=50)   # or pass empty dictionary
-flann = cv2.FlannBasedMatcher(index_params,search_params)
-
 train_descriptors = train_descriptors.astype(np.float32) # minor formatting fix
-query_descriptors = np.ascontiguousarray(query_descriptors)
-train_descriptors = np.ascontiguousarray(train_descriptors)
 
-matches = flann.knnMatch(query_descriptors, train_descriptors,k=2)
+# Brute Force
+bf = cv2.BFMatcher()
+matches = bf.knnMatch(query_descriptors, train_descriptors, k=2)
+#
+# # ..or FLANN
+# FLANN_INDEX_KDTREE = 0
+# index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
+# search_params = dict(checks=50)   # or pass empty dictionary
+# flann = cv2.FlannBasedMatcher(index_params,search_params)
+#
+# train_descriptors = train_descriptors.astype(np.float32) # minor formatting fix
+# query_descriptors = np.ascontiguousarray(query_descriptors)
+# train_descriptors = np.ascontiguousarray(train_descriptors)
+#
+# matches = flann.knnMatch(query_descriptors, train_descriptors, k=2)
 
 good = []
 for m,n in matches:
     if m.distance < 0.7 * n.distance: # or 0.75
         good.append([m])
 
+pdb.set_trace()
+
 for good_match in good:
     queryIndex = good_match[0].queryIdx
     trainIndex = good_match[0].trainIdx
-    print "query desc index: " + str(queryIndex) + "matches train index: " + str(trainIndex) + "3D point data: " + str(correspondences[trainIndex,130:133])
-
+    pdb.set_trace()
 
 # closest_image_id = 10 # this will have to be automatically acquired from an image retrieval system!! TODO: WRONG!!!
 # for i in range(0,len(lines),2):
