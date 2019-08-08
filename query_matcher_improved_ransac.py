@@ -37,12 +37,22 @@ def blob_to_array(blob, dtype, shape=(-1,)):
 def truncate(f, n):
     return math.floor(f * 10 ** n) / 10 ** n
 
+def get_good_matches(matches):
+    good = []
+    for m,n in matches:
+        if m.distance < 0.7 * n.distance: # or 0.75
+            good.append([m])
+    return good
+
 db = COLMAPDatabase.connect(query_image_database)
 
 #Note: the sift features should be extracted from COLMAP so they match the ones from the SFM dataset
 
 #query image stuff
-query_image_id = '3' #usually one as there is only 1
+query_image_id = '1'
+
+query_image_id_data = db.execute("SELECT image_id FROM images WHERE name = "+ "'" + query_image_name + ".JPG'")
+query_image_id = str(query_image_id_data.fetchone()[0])
 
 query_image_keypoints_data = db.execute("SELECT data FROM keypoints WHERE image_id = "+ "'" + query_image_id + "'")
 query_image_keypoints_data = query_image_keypoints_data.fetchone()[0]
@@ -74,37 +84,46 @@ for similar_image in similar_images_names:
     correspondences = np.concatenate((correspondences, array), axis = 0)
 
 print "matching.."
-query_descriptors = query_keypoints_xy_descriptors[:,0:128]
+query_descriptors = query_keypoints_xy_descriptors[:,2:130]
 train_descriptors = correspondences[:,0:128]
 train_descriptors = train_descriptors.astype(np.float32) # minor formatting fix
 
 # Brute Force
-# bf = cv2.BFMatcher()
-# matches = bf.knnMatch(query_descriptors, train_descriptors, k=2)
+bf = cv2.BFMatcher()
+matches = bf.knnMatch(query_descriptors, train_descriptors, k=2)
 #
 # # ..or FLANN
-FLANN_INDEX_KDTREE = 0
-index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
-search_params = dict(checks=50)   # or pass empty dictionary
-flann = cv2.FlannBasedMatcher(index_params,search_params)
+# FLANN_INDEX_KDTREE = 0
+# index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
+# search_params = dict(checks=50)   # or pass empty dictionary
+# flann = cv2.FlannBasedMatcher(index_params,search_params)
+#
+# train_descriptors = train_descriptors.astype(np.float32) # minor formatting fix
+# query_descriptors = np.ascontiguousarray(query_descriptors)
+# train_descriptors = np.ascontiguousarray(train_descriptors)
+#
+# matches = flann.knnMatch(query_descriptors, train_descriptors, k=2)
 
-train_descriptors = train_descriptors.astype(np.float32) # minor formatting fix
-query_descriptors = np.ascontiguousarray(query_descriptors)
-train_descriptors = np.ascontiguousarray(train_descriptors)
+good = get_good_matches(matches)
 
-matches = flann.knnMatch(query_descriptors, train_descriptors, k=2)
+print "found this many good matches: " + str(np.shape(good))
 
-good = []
-for m,n in matches:
-    if m.distance < 0.7 * n.distance: # or 0.75
-        good.append([m])
-
-pdb.set_trace()
-
+final_match_array = np.empty((0, 5))
 for good_match in good:
     queryIndex = good_match[0].queryIdx
     trainIndex = good_match[0].trainIdx
-    pdb.set_trace()
+    final_match_array_row = np.concatenate((query_keypoints_xy_descriptors[queryIndex,0:2], correspondences[trainIndex,130:133]) , axis = 0)
+    final_match_array = np.concatenate((final_match_array, final_match_array_row.reshape([1,5])), axis = 0)
+
+
+camera_matrix = np.array([  [3492,   0,   2003],
+                            [0,    3482,  1523],
+                            [0,      0,     1 ]], dtype = "float")
+
+(_, pnp_ransac_rotation_vector, pnp_ransac_translation_vector, inliers) = cv2.solvePnPRansac(final_match_array[:,2:5], final_match_array[:,0:2], camera_matrix, None, iterationsCount = 500, flags = cv2.SOLVEPNP_EPNP)
+
+np.savetxt("results/"+query_image_name+"/pnp_ransac_rotation_vector.txt", pnp_ransac_rotation_vector)
+np.savetxt("results/"+query_image_name+"/pnp_ransac_translation_vector.txt", pnp_ransac_translation_vector)
 
 # closest_image_id = 10 # this will have to be automatically acquired from an image retrieval system!! TODO: WRONG!!!
 # for i in range(0,len(lines),2):

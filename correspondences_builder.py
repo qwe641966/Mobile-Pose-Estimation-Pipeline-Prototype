@@ -8,7 +8,7 @@ import os
 import math
 import pdb
 
-# This script should return a text file for each image in the SFM data 
+# This script should return a text file for each image in the SFM data
 # that each text file's row is [SIFT desc, 2D xy, 3D xyz].
 # That is each 2D point and its 3D point corresponding along with the SIFT of that
 # 2D point
@@ -33,6 +33,13 @@ def blob_to_array(blob, dtype, shape=(-1,)):
 def truncate(f, n):
     return math.floor(f * 10 ** n) / 10 ** n
 
+def get_good_matches(matches):
+    good = []
+    for m,n in matches:
+        if m.distance < 0.7 * n.distance: # or 0.75
+            good.append([m])
+    return good
+
 points3D = np.empty((0, 4))
 points3D_text_file = database_dir+"/../sparse_model/points3D.txt"
 f = open(points3D_text_file, 'r')
@@ -55,9 +62,10 @@ db = COLMAPDatabase.connect(database_dir+"/database.db")
 
 images_names = db.execute("SELECT name FROM images")
 images_names = images_names.fetchall()
+images_names = ["IMG_7937.JPG"]
 
 for images_name in images_names:
-    image_id = db.execute("SELECT image_id FROM images WHERE name = "+"'"+str(images_name[0])+"'")
+    image_id = db.execute("SELECT image_id FROM images WHERE name = "+"'"+str(images_name)+"'")
     image_id = str(image_id.fetchone()[0])
     images_name = str(images_name[0]).split(".")[0]
 
@@ -98,7 +106,8 @@ for images_name in images_names:
     points2D_x_y_3Did = np.reshape(points2D_x_y_3Did,[np.shape(points2D_x_y_3Did)[0]/3,3])
     points3Dids = points2D_x_y_3Did[:,2].astype(np.float32)
     points3Dids_rows = np.shape(points3Dids)[0]
-    keypoints_xy_descriptors_3DpointId = np.concatenate((keypoints_xy_descriptors, np.reshape(points3Dids,[points3Dids_rows,1])), axis=1)
+
+    keypoints_xy_descriptors_3DpointId = np.concatenate((keypoints_xy_descriptors, np.reshape(points3Dids,[points3Dids_rows,1])), axis = 1)
 
     # get rid of keypoints that have no 3D point
     keypoints_xy_descriptors_3DpointId = keypoints_xy_descriptors_3DpointId[np.where(keypoints_xy_descriptors_3DpointId[:,130] !=-1)[0]]
@@ -106,6 +115,8 @@ for images_name in images_names:
     # each row: the 2D point and its SIFT descriptor and its 3D point id
     # each 2D point has one 3D point or none (-1)
     os.system("mkdir "+database_dir+"/../points_correspondences/"+images_name)
+
+    pdb.set_trace()
 
     keypoints_points3Dids = keypoints_xy_descriptors_3DpointId[:,130]
 

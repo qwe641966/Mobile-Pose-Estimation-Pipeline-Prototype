@@ -23,14 +23,14 @@ if(create_correspondences == '1'):
     os.system("python2.7 correspondences_builder.py "+data_dir+"/model_images_database "+data_dir+"/points_correspondences")
 
 print "Running script 1/4"
-os.system("time python2.7 image_retrieval_query_image.py "+data_dir+"/query_images/"+query_image_arg)
+os.system("python2.7 image_retrieval_query_image.py "+data_dir+"/query_images/"+query_image_arg)
 print "Running script 2/4"
-os.system("time python2.7 query_image_feature_extraction.py "+data_dir+" "+query_image_arg)
+os.system("python2.7 query_image_feature_extraction.py "+data_dir+" "+query_image_arg)
 
 print "Running script 3/4"
-os.system("time python2.7 query_matcher_improved_ransac.py "+data_dir+" "+query_image_arg_no_ext)
+os.system("python2.7 query_matcher_improved_ransac.py "+data_dir+" "+query_image_arg_no_ext)
 if(run_soft_posit == '1'):
     print 'Running softposit script'
     # run matlab script here
 print "Running script 4/4"
-os.system("time python2.7 visualizer.py "+data_dir+"/query_images/"+query_image_arg)
+os.system("python2.7 visualizer.py "+data_dir+"/query_images/"+query_image_arg)
