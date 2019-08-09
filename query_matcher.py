@@ -122,17 +122,17 @@ keypoints_descriptors = keypoints_descriptors.astype(np.float32)
 # now we need to find which ones are good matches...
 
 # Brute Force
-# bf = cv2.BFMatcher()
-# matches = bf.knnMatch(query_keypoints_descriptors, keypoints_descriptors, k=2)
+bf = cv2.BFMatcher()
+matches = bf.knnMatch(query_keypoints_descriptors, keypoints_descriptors, k=2)
 
 # ..or FLANN
-FLANN_INDEX_KDTREE = 0
-index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
-search_params = dict(checks=50)   # or pass empty dictionary
-flann = cv2.FlannBasedMatcher(index_params,search_params)
-query_keypoints_descriptors = np.ascontiguousarray(query_keypoints_descriptors)
-keypoints_descriptors = np.ascontiguousarray(keypoints_descriptors)
-matches = flann.knnMatch(query_keypoints_descriptors, keypoints_descriptors,k=2)
+# FLANN_INDEX_KDTREE = 0
+# index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
+# search_params = dict(checks=50)   # or pass empty dictionary
+# flann = cv2.FlannBasedMatcher(index_params,search_params)
+# query_keypoints_descriptors = np.ascontiguousarray(query_keypoints_descriptors)
+# keypoints_descriptors = np.ascontiguousarray(keypoints_descriptors)
+# matches = flann.knnMatch(query_keypoints_descriptors, keypoints_descriptors,k=2)
 
 good = []
 for m,n in matches:
