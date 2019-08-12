@@ -9,13 +9,10 @@ query_image_path = sys.argv[1]
 query_image_name = query_image_path.rsplit("/",1)[1].split(".")[0]
 
 points_correspondences = np.loadtxt("results/"+query_image_name+"/final_match_array.txt")
+intrinsic_matrix = np.loadtxt("results/"+query_image_name+"/intrinsics_matrix.txt")
 
 points2D = points_correspondences[:,0:2]
 points3D = points_correspondences[:,2:5]
-
-intrinsicMatrix = np.array([[3492,   0,   2003],
-                            [0,    3482,  1523],
-                            [0,      0,     1 ]], dtype = "float")
 
 # focalLength = camera_matrix[0,0]
 # center = np.array([camera_matrix[0,2], camera_matrix[1,2]])
@@ -33,7 +30,7 @@ ones = np.ones(no_points3D)
 ones = ones.reshape(no_points3D,1)
 points3D = np.concatenate((points3D, ones), axis=1) #make homogeneous
 
-points2D_projected = np.dot(np.dot(np.transpose(intrinsicMatrix), np.concatenate((pnp_ransac_rot, pnp_ransac_trans.reshape([3,1])),axis=1)), np.transpose(points3D))
+points2D_projected = np.dot(np.dot(intrinsic_matrix, np.concatenate((pnp_ransac_rot, pnp_ransac_trans.reshape([3,1])),axis=1)), np.transpose(points3D))
 points2D_projected = np.transpose(points2D_projected)
 points2D_projected = points2D_projected / points2D_projected[:,2].reshape(no_points3D,1)
 points2D_projected = np.round(points2D_projected)

@@ -116,11 +116,14 @@ for good_match in good:
     final_match_array = np.concatenate((final_match_array, final_match_array_row.reshape([1,5])), axis = 0)
 
 
-camera_matrix = np.array([  [3492,   0,   2003],
-                            [0,    3482,  1523],
-                            [0,      0,     1 ]], dtype = "float")
+intrinsics_matrix = np.array([ [507.69,    0,    320.08],
+                               [0,      507.62,  238.19],
+                               [0,         0,       1  ]], dtype = "float")
 
-(_, pnp_ransac_rotation_vector, pnp_ransac_translation_vector, inliers) = cv2.solvePnPRansac(final_match_array[:,2:5], final_match_array[:,0:2], camera_matrix, None, iterationsCount = 100, flags = cv2.SOLVEPNP_EPNP)
+np.savetxt("results/"+query_image_name+"/final_match_array.txt",final_match_array)
+np.savetxt("results/"+query_image_name+"/intrinsics_matrix.txt",intrinsics_matrix)
+
+(_, pnp_ransac_rotation_vector, pnp_ransac_translation_vector, inliers) = cv2.solvePnPRansac(final_match_array[:,2:5], final_match_array[:,0:2], intrinsics_matrix, None, iterationsCount = 100, flags = cv2.SOLVEPNP_EPNP)
 
 np.savetxt("results/"+query_image_name+"/pnp_ransac_rotation_vector.txt", pnp_ransac_rotation_vector)
 np.savetxt("results/"+query_image_name+"/pnp_ransac_translation_vector.txt", pnp_ransac_translation_vector)
