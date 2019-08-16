@@ -123,7 +123,7 @@ intrinsics_matrix = np.array([ [507.69,    0,    320.08],
 np.savetxt("results/"+query_image_name+"/final_match_array.txt",final_match_array)
 np.savetxt("results/"+query_image_name+"/intrinsics_matrix.txt",intrinsics_matrix)
 
-(_, pnp_ransac_rotation_vector, pnp_ransac_translation_vector, inliers) = cv2.solvePnPRansac(final_match_array[:,2:5], final_match_array[:,0:2], intrinsics_matrix, None, iterationsCount = 100, flags = cv2.SOLVEPNP_EPNP)
+(_, pnp_ransac_rotation_vector, pnp_ransac_translation_vector, inliers) = cv2.solvePnPRansac(final_match_array[:,2:5], final_match_array[:,0:2], intrinsics_matrix, None, iterationsCount = 500, confidence = 0.99, flags = cv2.SOLVEPNP_EPNP)
 
 np.savetxt("results/"+query_image_name+"/pnp_ransac_rotation_vector.txt", pnp_ransac_rotation_vector)
 np.savetxt("results/"+query_image_name+"/pnp_ransac_translation_vector.txt", pnp_ransac_translation_vector)
