@@ -88,6 +88,8 @@ query_descriptors = query_keypoints_xy_descriptors[:,2:130]
 train_descriptors = correspondences[:,0:128]
 train_descriptors = train_descriptors.astype(np.float32) # minor formatting fix
 
+
+
 # Brute Force
 bf = cv2.BFMatcher()
 matches = bf.knnMatch(query_descriptors, train_descriptors, k=2)
@@ -115,10 +117,15 @@ for good_match in good:
     final_match_array_row = np.concatenate((query_keypoints_xy_descriptors[queryIndex,0:2], correspondences[trainIndex,130:133]) , axis = 0)
     final_match_array = np.concatenate((final_match_array, final_match_array_row.reshape([1,5])), axis = 0)
 
+# for IMG_7932.JPG
+intrinsics_matrix = np.array([ [3492,    0,    2003],
+                               [0,      3482,  1523],
+                               [0,        0,     1  ]], dtype = "float")
 
-intrinsics_matrix = np.array([ [507.69,    0,    320.08],
-                               [0,      507.62,  238.19],
-                               [0,         0,       1  ]], dtype = "float")
+# for google_ar1.JPG
+# intrinsics_matrix = np.array([ [507.69,    0,    320.08],
+#                                [0,      507.62,  238.19],
+#                                [0,         0,       1  ]], dtype = "float")
 
 np.savetxt("results/"+query_image_name+"/final_match_array.txt",final_match_array)
 np.savetxt("results/"+query_image_name+"/intrinsics_matrix.txt",intrinsics_matrix)

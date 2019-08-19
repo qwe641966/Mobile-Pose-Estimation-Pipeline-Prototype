@@ -43,8 +43,8 @@ for i in range(rows):
     x = int(points2D_projected[i][0])
     y = int(points2D_projected[i][1])
     center = (np.shape(img)[1]-y,x) # weird matlab to python indexing..
-    cv2.circle(img, center, 4, (0, 0, 255), -1)
+    cv2.circle(img, center, 8, (0, 0, 255), -1)
 
 cv2.imwrite("results/" + query_image_name + "_result.png",img)
 # do not use the following when doing batch
-# os.system("open results/" + query_image_name + "_result.png")
+os.system("open results/" + query_image_name + "_result.png")
