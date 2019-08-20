@@ -16,7 +16,8 @@ import math
 # the 3D points data from COLMAP)
 
 data_dir = sys.argv[1]
-query_image_name = sys.argv[2]
+query_image_name_with_ext = sys.argv[2]
+query_image_name = query_image_name_with_ext.split(".")[0]
 
 query_image_database = data_dir +"/query_images_databases/database_for_"+query_image_name+".db"
 
@@ -48,10 +49,7 @@ db = COLMAPDatabase.connect(query_image_database)
 
 #Note: the sift features should be extracted from COLMAP so they match the ones from the SFM dataset
 
-#query image stuff
-query_image_id = '1'
-
-query_image_id_data = db.execute("SELECT image_id FROM images WHERE name = "+ "'" + query_image_name + ".JPG'")
+query_image_id_data = db.execute("SELECT image_id FROM images WHERE name = "+ "'" + query_image_name_with_ext + "'")
 query_image_id = str(query_image_id_data.fetchone()[0])
 
 query_image_keypoints_data = db.execute("SELECT data FROM keypoints WHERE image_id = "+ "'" + query_image_id + "'")
@@ -118,14 +116,19 @@ for good_match in good:
     final_match_array = np.concatenate((final_match_array, final_match_array_row.reshape([1,5])), axis = 0)
 
 # for IMG_7932.JPG
-intrinsics_matrix = np.array([ [3492,    0,    2003],
-                               [0,      3482,  1523],
-                               [0,        0,     1  ]], dtype = "float")
+# intrinsics_matrix = np.array([ [3492,    0,    2003],
+#                                [0,      3482,  1523],
+#                                [0,        0,     1  ]], dtype = "float")
 
 # for google_ar1.JPG
 # intrinsics_matrix = np.array([ [507.69,    0,    320.08],
 #                                [0,      507.62,  238.19],
 #                                [0,         0,       1  ]], dtype = "float")
+
+# for google_arcore0.JPG
+intrinsics_matrix = np.array([ [1015,    0,    640.66],
+                               [0,      1015,  356.89],
+                               [0,        0,     1  ]], dtype = "float")
 
 np.savetxt("results/"+query_image_name+"/final_match_array.txt",final_match_array)
 np.savetxt("results/"+query_image_name+"/intrinsics_matrix.txt",intrinsics_matrix)

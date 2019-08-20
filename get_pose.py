@@ -6,7 +6,7 @@ build_retrieval_database = sys.argv[1]
 create_correspondences = sys.argv[2]
 query_image_arg = sys.argv[3] # i.e IMG_7932.JPG
 data_dir = sys.argv[4] # i.e data/coop3
-run_soft_posit = sys.argv[5]
+# run_soft_posit = sys.argv[5]
 
 query_image_arg_no_ext = query_image_arg.split(".")[0]
 
@@ -28,9 +28,9 @@ print "Running script 2/4"
 os.system("python2.7 query_image_feature_extraction.py "+data_dir+" "+query_image_arg)
 
 print "Running script 3/4"
-os.system("python2.7 query_matcher_improved_ransac.py "+data_dir+" "+query_image_arg_no_ext)
-if(run_soft_posit == '1'):
-    print 'Running softposit script'
-    # run matlab script here
+os.system("python2.7 query_matcher_improved_ransac.py "+data_dir+" "+query_image_arg)
+# if(run_soft_posit == '1'):
+#     print 'Running softposit script'
+#     run matlab script here
 print "Running script 4/4"
 os.system("python2.7 visualizer.py "+data_dir+"/query_images/"+query_image_arg)

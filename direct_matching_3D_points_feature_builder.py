@@ -14,7 +14,6 @@ import pdb
 # 2D point
 
 database_dir = sys.argv[1]
-correspondences_dir = sys.argv[2]
 
 IS_PYTHON3 = sys.version_info[0] >= 3
 
@@ -113,7 +112,7 @@ for images_name in images_names:
     keypoints_xy_descriptors_3DpointId = keypoints_xy_descriptors_3DpointId.astype(float)
     # each row: the 2D point and its SIFT descriptor and its 3D point id
     # each 2D point has one 3D point or none (-1)
-    os.system("mkdir "+database_dir+"/../points_correspondences/"+images_name.replace(" ","\\ "))
+    # os.system("mkdir "+database_dir+"/../points_correspondences/"+images_name)
 
     keypoints_points3Dids = keypoints_xy_descriptors_3DpointId[:,130]
 
@@ -127,7 +126,9 @@ for images_name in images_names:
     all_matching_points3D = np.reshape(all_matching_points3D, [np.shape(all_matching_points3D)[0]/3,3])
     keypoints_xy_descriptors_3DpointId_xyz = np.concatenate((keypoints_xy_descriptors_3DpointId, all_matching_points3D), axis=1)
 
+    pdb.set_trace()
+
     correspondences = np.concatenate((keypoints_xy_descriptors_3DpointId_xyz[:,0:2], keypoints_xy_descriptors_3DpointId_xyz[:,131:134]), axis=1)
     correspondences = np.concatenate((keypoints_xy_descriptors_3DpointId_xyz[:,2:130], correspondences), axis=1)
 
-    np.savetxt(database_dir+"/../points_correspondences/"+images_name+"/correspondences.txt", correspondences)
+    # np.savetxt(database_dir+"/../direct_matching_data/"+images_name+"/correspondences.txt", correspondences)
