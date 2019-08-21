@@ -9,5 +9,5 @@ kp, descriptors = sift.detectAndCompute(query_image,None)
 
 img = cv2.drawKeypoints(query_image, kp, None, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
-cv2.imwrite(sys.argv[1]+"_sift.png",img)
+cv2.imwrite(sys.argv[1]+"_sift_viewer.png",img)
 
