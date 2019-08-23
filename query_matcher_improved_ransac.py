@@ -84,8 +84,6 @@ if(query_image_name+"\n" in similar_images_names):
     print "Test image name will be removed from results"
     similar_images_names.remove(query_image_name+"\n")
 
-pdb.set_trace()
-
 all_images_text_file = data_dir+"/sparse_model/images.txt"
 f = open(all_images_text_file, 'r')
 lines = f.readlines()

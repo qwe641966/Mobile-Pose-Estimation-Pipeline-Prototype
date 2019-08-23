@@ -47,4 +47,4 @@ for i in range(rows):
 
 cv2.imwrite("results/" + query_image_name + "_result.png",img)
 # do not use the following when doing batch
-os.system("open results/" + query_image_name + "_result.png")
+# os.system("open results/" + query_image_name + "_result.png")
