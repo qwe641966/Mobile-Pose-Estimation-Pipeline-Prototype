@@ -9,7 +9,7 @@ import math
 import pdb
 
 # This script should return a text file for each image in the SFM data
-# that each text file's row is [SIFT desc, 2D xy, 3D xyz].
+# that each text file's row is [SIFT desc, 2D xy, 3D xyz, 3D id].
 # That is each 2D point and its 3D point corresponding along with the SIFT of that
 # 2D point
 
@@ -61,6 +61,7 @@ db = COLMAPDatabase.connect(database_dir+"/database.db")
 
 images_names = db.execute("SELECT name FROM images")
 images_names = images_names.fetchall()
+all_raw_data = np.empty((0, 129))
 
 for images_name in images_names:
     image_id = db.execute("SELECT image_id FROM images WHERE name = "+"'"+str(images_name[0])+"'")
@@ -106,29 +107,23 @@ for images_name in images_names:
     points3Dids_rows = np.shape(points3Dids)[0]
 
     keypoints_xy_descriptors_3DpointId = np.concatenate((keypoints_xy_descriptors, np.reshape(points3Dids,[points3Dids_rows,1])), axis = 1)
+    descriptors_3DpointId = keypoints_xy_descriptors_3DpointId[:,2:131]
 
-    # get rid of keypoints that have no 3D point
-    keypoints_xy_descriptors_3DpointId = keypoints_xy_descriptors_3DpointId[np.where(keypoints_xy_descriptors_3DpointId[:,130] !=-1)[0]]
-    keypoints_xy_descriptors_3DpointId = keypoints_xy_descriptors_3DpointId.astype(float)
-    # each row: the 2D point and its SIFT descriptor and its 3D point id
-    # each 2D point has one 3D point or none (-1)
-    # os.system("mkdir "+database_dir+"/../points_correspondences/"+images_name)
+    all_raw_data = np.concatenate((all_raw_data, descriptors_3DpointId), axis=0)
 
-    keypoints_points3Dids = keypoints_xy_descriptors_3DpointId[:,130]
+points3Did_average = np.empty((0, 129))
+print "Averaging..."
+for i in range(np.shape(points3D)[0]):
+    point3Did = points3D[i,0]
+    indices = np.where(all_raw_data[:,128] == point3Did)
+    if indices[0].size != 0:
+        subset_all_raw_data = all_raw_data[indices][:,0:128]
+        mean = np.mean(subset_all_raw_data, axis=0)
+        mean = mean.reshape([1,128])
+        elem = np.append(mean, point3Did)
+        elem = elem.astype(np.float64)
+        elem = elem.reshape([1,129])
+        points3Did_average = np.concatenate((points3Did_average, elem), axis=0)
 
-    all_matching_points3D = np.empty((0, 3))
-
-    for i in range(len(keypoints_points3Dids)):
-        point3Did = np.where(points3D[:,0] == keypoints_points3Dids[i])[0][0]
-        point3Dxyz = points3D[point3Did][1:4]
-        all_matching_points3D = np.append(all_matching_points3D, [point3Dxyz])
-
-    all_matching_points3D = np.reshape(all_matching_points3D, [np.shape(all_matching_points3D)[0]/3,3])
-    keypoints_xy_descriptors_3DpointId_xyz = np.concatenate((keypoints_xy_descriptors_3DpointId, all_matching_points3D), axis=1)
-
-    pdb.set_trace()
-
-    correspondences = np.concatenate((keypoints_xy_descriptors_3DpointId_xyz[:,0:2], keypoints_xy_descriptors_3DpointId_xyz[:,131:134]), axis=1)
-    correspondences = np.concatenate((keypoints_xy_descriptors_3DpointId_xyz[:,2:130], correspondences), axis=1)
-
-    # np.savetxt(database_dir+"/../direct_matching_data/"+images_name+"/correspondences.txt", correspondences)
+print "Writing to file..."
+np.savetxt("direct_matching_results/averages_3Dpoints.txt", points3Did_average)
