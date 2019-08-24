@@ -6,6 +6,8 @@ import cv2
 import scipy.io as sio
 import os
 import math
+from direct_matcher import direct_matching
+from image_retrieval_matcher import image_retrieval_matching
 
 # This file will return the camera intrinsics of the query image and also the
 # initial rotation and translation from the similar image to the query image in the database.
@@ -169,14 +171,14 @@ for good_match in good_direct:
     final_match_array_direct = np.concatenate((final_match_array_direct, final_match_array_row.reshape([1,5])), axis = 0)
 
 # for IMG_7932.JPG
-intrinsics_matrix = np.array([ [3492,    0,    2003],
-                               [0,      3482,  1523],
-                               [0,        0,     1  ]], dtype = "float")
+# intrinsics_matrix = np.array([ [3492,    0,    2003],
+#                                [0,      3482,  1523],
+#                                [0,        0,     1  ]], dtype = "float")
 
 # for google_ar1.JPG
-# intrinsics_matrix = np.array([ [507.69,    0,    320.08],
-#                                [0,      507.62,  238.19],
-#                                [0,         0,       1  ]], dtype = "float")
+intrinsics_matrix = np.array([ [507.69,    0,    320.08],
+                               [0,      507.62,  238.19],
+                               [0,         0,       1  ]], dtype = "float")
 
 # for google_arcore0.JPG
 # intrinsics_matrix = np.array([ [1015,    0,    640.66],
