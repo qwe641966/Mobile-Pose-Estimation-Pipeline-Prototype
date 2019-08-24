@@ -126,8 +126,14 @@ train_descriptors = train_descriptors.astype(np.float32) # minor formatting fix
 
 # Brute Force
 bf = cv2.BFMatcher()
+
+# direct matching override
+train_descriptors_direct_match = np.loadtxt('direct_matching_results/averages_3Dpoints_xyz.txt')
+train_descriptors_direct_match = train_descriptors_direct_match.astype(np.float32)
+
 matches = bf.knnMatch(query_descriptors, train_descriptors, k=2)
-#
+matches_direct = bf.knnMatch(query_descriptors, train_descriptors_direct_match[:,0:128], k=2)
+
 # # ..or FLANN
 # FLANN_INDEX_KDTREE = 0
 # index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
@@ -151,6 +157,17 @@ for good_match in good:
     final_match_array_row = np.concatenate((query_keypoints_xy_descriptors[queryIndex,0:2], correspondences[trainIndex,130:133]) , axis = 0)
     final_match_array = np.concatenate((final_match_array, final_match_array_row.reshape([1,5])), axis = 0)
 
+good_direct = get_good_matches(matches_direct)
+
+print "found this many good matches direct: " + str(np.shape(good))
+
+final_match_array_direct = np.empty((0, 5))
+for good_match in good_direct:
+    queryIndex = good_match[0].queryIdx
+    trainIndex = good_match[0].trainIdx
+    final_match_array_row = np.concatenate((query_keypoints_xy_descriptors[queryIndex,0:2], train_descriptors_direct_match[trainIndex,129:132]) , axis = 0)
+    final_match_array_direct = np.concatenate((final_match_array_direct, final_match_array_row.reshape([1,5])), axis = 0)
+
 # for IMG_7932.JPG
 intrinsics_matrix = np.array([ [3492,    0,    2003],
                                [0,      3482,  1523],
@@ -170,12 +187,13 @@ np.savetxt("results/"+query_image_name+"/final_match_array.txt",final_match_arra
 np.savetxt("results/"+query_image_name+"/intrinsics_matrix.txt",intrinsics_matrix)
 
 (_, pnp_ransac_rotation_vector, pnp_ransac_translation_vector, inliers) = cv2.solvePnPRansac(final_match_array[:,2:5], final_match_array[:,0:2], intrinsics_matrix, None, iterationsCount = 500, confidence = 0.99, flags = cv2.SOLVEPNP_EPNP)
+(_, pnp_ransac_rotation_vector_direct, pnp_ransac_translation_vector_direct, inliers) = cv2.solvePnPRansac(final_match_array_direct[:,2:5], final_match_array_direct[:,0:2], intrinsics_matrix, None, iterationsCount = 500, confidence = 0.99, flags = cv2.SOLVEPNP_EPNP)
 
 pnp_ransac_rotation_matrix = cv2.Rodrigues(pnp_ransac_rotation_vector)[0]
 calculated_P = np.concatenate((pnp_ransac_rotation_matrix, pnp_ransac_translation_vector), axis =1)
 
-np.savetxt("results/"+query_image_name+"/pnp_ransac_rotation_vector.txt", pnp_ransac_rotation_vector)
-np.savetxt("results/"+query_image_name+"/pnp_ransac_translation_vector.txt", pnp_ransac_translation_vector)
+np.savetxt("results/"+query_image_name+"/pnp_ransac_rotation_vector.txt", pnp_ransac_rotation_vector_direct)
+np.savetxt("results/"+query_image_name+"/pnp_ransac_translation_vector.txt", pnp_ransac_translation_vector_direct)
 
 #save mse error
 mse = (np.square(ground_truth_P - calculated_P)).mean(axis = None)

@@ -111,19 +111,21 @@ for images_name in images_names:
 
     all_raw_data = np.concatenate((all_raw_data, descriptors_3DpointId), axis=0)
 
-points3Did_average = np.empty((0, 129))
+points3Did_average_xyz = np.empty((0, 132))
 print "Averaging..."
 for i in range(np.shape(points3D)[0]):
     point3Did = points3D[i,0]
     indices = np.where(all_raw_data[:,128] == point3Did)
+    point3D_xyz = points3D[np.where(points3D[:,0] == point3Did)][0][1:4]
     if indices[0].size != 0:
         subset_all_raw_data = all_raw_data[indices][:,0:128]
         mean = np.mean(subset_all_raw_data, axis=0)
         mean = mean.reshape([1,128])
         elem = np.append(mean, point3Did)
+        elem = np.append(elem, point3D_xyz)
         elem = elem.astype(np.float64)
-        elem = elem.reshape([1,129])
-        points3Did_average = np.concatenate((points3Did_average, elem), axis=0)
+        elem = elem.reshape([1,132])
+        points3Did_average_xyz = np.concatenate((points3Did_average_xyz, elem), axis=0)
 
 print "Writing to file..."
-np.savetxt("direct_matching_results/averages_3Dpoints.txt", points3Did_average)
+np.savetxt("direct_matching_results/averages_3Dpoints_xyz.txt", points3Did_average_xyz)
