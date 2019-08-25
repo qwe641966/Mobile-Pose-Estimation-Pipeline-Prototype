@@ -8,10 +8,8 @@ import os
 import math
 import pdb
 
-# This script should return a text file for each image in the SFM data
-# that each text file's row is [SIFT desc, 2D xy, 3D xyz, 3D id].
-# That is each 2D point and its 3D point corresponding along with the SIFT of that
-# 2D point
+# This script should return a text file with all the 3D points and their
+# SIFT average and their id. Each row will be [SIFT average, point id, xyz]
 
 database_dir = sys.argv[1]
 
@@ -64,6 +62,7 @@ images_names = images_names.fetchall()
 all_raw_data = np.empty((0, 129))
 
 for images_name in images_names:
+
     image_id = db.execute("SELECT image_id FROM images WHERE name = "+"'"+str(images_name[0])+"'")
     image_id = str(image_id.fetchone()[0])
     images_name = str(images_name[0]).split(".")[0]

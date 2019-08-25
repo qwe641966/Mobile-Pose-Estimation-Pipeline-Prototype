@@ -11,7 +11,6 @@ query_image_name = query_image_path.rsplit("/",1)[1].split(".")[0]
 points_correspondences = np.loadtxt("results/"+query_image_name+"/final_match_array.txt")
 intrinsic_matrix = np.loadtxt("results/"+query_image_name+"/intrinsics_matrix.txt")
 
-points2D = points_correspondences[:,0:2]
 points3D = points_correspondences[:,2:5]
 
 # focalLength = camera_matrix[0,0]
@@ -43,7 +42,7 @@ for i in range(rows):
     x = int(points2D_projected[i][0])
     y = int(points2D_projected[i][1])
     center = (np.shape(img)[1]-y,x) # weird matlab to python indexing..
-    cv2.circle(img, center, 8, (0, 0, 255), -1)
+    cv2.circle(img, center, 4, (0, 0, 255), -1)
 
 cv2.imwrite("results/" + query_image_name + "_result.png",img)
 # do not use the following when doing batch
