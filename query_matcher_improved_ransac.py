@@ -124,8 +124,8 @@ final_match_array_direct = direct_matching(query_keypoints_xy_descriptors)
 #                                [0,         0,       1  ]], dtype = "float")
 
 # for google_arcore*.JPG
-intrinsics_matrix = np.array([ [1015,    0,     640.66],
-                               [0,      1015,   356.89],
+intrinsics_matrix = np.array([ [1015,    0,     640],
+                               [0,      1015,   356],
                                [0,        0,     1  ]], dtype = "float")
 
 np.savetxt("results/"+query_image_name+"/final_match_array.txt", final_match_array_direct)
@@ -134,8 +134,8 @@ np.savetxt("results/"+query_image_name+"/intrinsics_matrix.txt", intrinsics_matr
 (_, pnp_ransac_rotation_vector, pnp_ransac_translation_vector, inliers_image_retrieval) = cv2.solvePnPRansac(final_match_array[:,2:5], final_match_array[:,0:2], intrinsics_matrix, None, iterationsCount = 500, confidence = 0.99, flags = cv2.SOLVEPNP_EPNP)
 (_, pnp_ransac_rotation_vector_direct, pnp_ransac_translation_vector_direct, inliers_direct) = cv2.solvePnPRansac(final_match_array_direct[:,2:5], final_match_array_direct[:,0:2], intrinsics_matrix, None, iterationsCount = 500, confidence = 0.99, flags = cv2.SOLVEPNP_EPNP)
 
-print "RANSAC inliers inliers_image_retrieval " + np.shape(inliers_image_retrieval)[0]
-print "RANSAC inliers direct" + np.shape(inliers_direct)[0]
+print "RANSAC inliers inliers_image_retrieval " + str(np.shape(inliers_image_retrieval)[0])
+print "RANSAC inliers direct " + str(np.shape(inliers_direct)[0])
 
 np.savetxt("results/"+query_image_name+"/pnp_ransac_rotation_vector.txt", pnp_ransac_rotation_vector_direct)
 np.savetxt("results/"+query_image_name+"/pnp_ransac_translation_vector.txt", pnp_ransac_translation_vector_direct)
