@@ -7,6 +7,7 @@ create_correspondences = sys.argv[2]
 query_image_arg = sys.argv[3] # i.e IMG_7932.JPG
 data_dir = sys.argv[4] # i.e data/coop3
 benchmarking  = sys.argv[5] # use this if you are test an images already in the dataset
+intrinsics_matrix_path = sys.argv[6]
 # run_soft_posit = sys.argv[5]
 
 query_image_arg_no_ext = query_image_arg.split(".")[0]
@@ -34,11 +35,11 @@ print "python2.7 query_image_feature_extraction.py "+data_dir+" "+query_image_ar
 os.system("python2.7 query_image_feature_extraction.py "+data_dir+" "+query_image_arg)
 
 print "Running script 3/4"
-print "python2.7 query_matcher_improved_ransac.py "+data_dir+" "+query_image_arg+" "+benchmarking
-os.system("python2.7 query_matcher_improved_ransac.py "+data_dir+" "+query_image_arg+" "+benchmarking)
+print "python2.7 query_matcher_improved_ransac.py "+data_dir+" "+query_image_arg+" "+benchmarking + " " + intrinsics_matrix_path
+os.system("python2.7 query_matcher_improved_ransac.py "+data_dir+" "+query_image_arg+" "+benchmarking + " " + intrinsics_matrix_path)
 # if(run_soft_posit == '1'):
 #     print 'Running softposit script'
 #     run matlab script here
 print "Running script 4/4"
-print "python2.7 visualizer.py "+data_dir+"/query_images/"+query_image_arg
-os.system("python2.7 visualizer.py "+data_dir+"/query_images/"+query_image_arg)
+print "python2.7 visualizer.py "+data_dir+"/query_images/"+query_image_arg + " " + intrinsics_matrix_path
+os.system("python2.7 visualizer.py "+data_dir+"/query_images/"+query_image_arg + " " + intrinsics_matrix_path)

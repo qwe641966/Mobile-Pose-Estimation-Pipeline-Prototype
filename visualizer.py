@@ -6,10 +6,11 @@ import scipy.io as sio
 import os
 
 query_image_path = sys.argv[1]
+intrinsics_matrix_path = sys.argv[2]
 query_image_name = query_image_path.rsplit("/",1)[1].split(".")[0]
 
 points_correspondences = np.loadtxt("results/"+query_image_name+"/final_match_array.txt")
-intrinsic_matrix = np.loadtxt("results/"+query_image_name+"/intrinsics_matrix.txt")
+intrinsic_matrix = np.loadtxt(intrinsics_matrix_path)
 
 points3D = points_correspondences[:,2:5]
 
@@ -43,8 +44,8 @@ for i in range(rows):
     y = int(points2D_projected[i][1])
     center = (x,y)
     # center = (np.shape(img)[1]-y,x) # weird matlab to python indexing..
-    print "x: " + str(center[0]) + ", y: " + str(center[1])
-    cv2.circle(img, center, 4, (0, 0, 255), -1)
+    # print "x: " + str(center[0]) + ", y: " + str(center[1])
+    cv2.circle(img, center, 9, (0, 0, 255), -1)
 
 cv2.imwrite("results/" + query_image_name + "_result.png",img)
 # do not use the following when doing batch
