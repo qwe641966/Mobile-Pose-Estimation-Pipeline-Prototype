@@ -135,7 +135,7 @@ intrinsics_matrix = np.loadtxt(intrinsics_matrix_path)
 np.savetxt("results/"+query_image_name+"/final_match_array.txt", final_match_array_direct)
 np.savetxt("results/"+query_image_name+"/intrinsics_matrix.txt", intrinsics_matrix)
 
-(_, pnp_ransac_rotation_vector, pnp_ransac_translation_vector, inliers_image_retrieval) = cv2.solvePnPRansac(final_match_array[:,2:5], final_match_array[:,0:2], intrinsics_matrix, None, iterationsCount = 500, confidence = 0.99, flags = cv2.SOLVEPNP_EPNP)
+(_, pnp_ransac_rotation_vector_image_retrieval, pnp_ransac_translation_vector_image_retrieval, inliers_image_retrieval) = cv2.solvePnPRansac(final_match_array[:,2:5], final_match_array[:,0:2], intrinsics_matrix, None, iterationsCount = 500, confidence = 0.99, flags = cv2.SOLVEPNP_EPNP)
 (_, pnp_ransac_rotation_vector_direct, pnp_ransac_translation_vector_direct, inliers_direct) = cv2.solvePnPRansac(final_match_array_direct[:,2:5], final_match_array_direct[:,0:2], intrinsics_matrix, None, iterationsCount = 500, confidence = 0.99, flags = cv2.SOLVEPNP_EPNP)
 
 if inliers_image_retrieval is None:
@@ -148,8 +148,11 @@ if inliers_direct is None:
 else:
     print "RANSAC inliers direct " + str(np.shape(inliers_direct)[0])
 
-np.savetxt("results/"+query_image_name+"/pnp_ransac_rotation_vector.txt", pnp_ransac_rotation_vector)
-np.savetxt("results/"+query_image_name+"/pnp_ransac_translation_vector.txt", pnp_ransac_translation_vector)
+np.savetxt("results/"+query_image_name+"/pnp_ransac_rotation_vector_image_retrieval.txt", pnp_ransac_rotation_vector_image_retrieval)
+np.savetxt("results/"+query_image_name+"/pnp_ransac_translation_vector_image_retrieval.txt", pnp_ransac_translation_vector_image_retrieval)
+
+np.savetxt("results/"+query_image_name+"/pnp_ransac_rotation_vector_direct.txt", pnp_ransac_rotation_vector_direct)
+np.savetxt("results/"+query_image_name+"/pnp_ransac_translation_vector_direct.txt", pnp_ransac_translation_vector_direct)
 
 # error stuff
 

@@ -14,14 +14,13 @@ intrinsic_matrix = np.loadtxt(intrinsics_matrix_path)
 
 points3D = points_correspondences[:,2:5]
 
-# focalLength = camera_matrix[0,0]
-# center = np.array([camera_matrix[0,2], camera_matrix[1,2]])
-# intrinsicMatrix = np.array([ focalLength, 0, 0, 0, focalLength, 0, center[0], center[1], 1])
-# intrinsicMatrix = intrinsicMatrix.reshape(3,3)
-# radialDistortion = np.array([0, 0])
-
-pnp_ransac_rot = np.loadtxt("results/"+query_image_name+"/pnp_ransac_rotation_vector.txt")
-pnp_ransac_trans = np.loadtxt("results/"+query_image_name+"/pnp_ransac_translation_vector.txt")
+# Switch between the ones below:
+# Image Retrieval
+pnp_ransac_rot = np.loadtxt("results/"+query_image_name+"/pnp_ransac_rotation_vector_direct.txt")
+pnp_ransac_trans = np.loadtxt("results/"+query_image_name+"/pnp_ransac_translation_vector_direct.txt")
+# Direct Matching
+# pnp_ransac_rot = np.loadtxt("results/"+query_image_name+"/pnp_ransac_rotation_vector_image_retrieval.txt")
+# pnp_ransac_trans = np.loadtxt("results/"+query_image_name+"/pnp_ransac_translation_vector_image_retrieval.txt")
 
 pnp_ransac_rot = cv2.Rodrigues(pnp_ransac_rot)[0]
 

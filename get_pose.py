@@ -10,6 +10,8 @@ benchmarking  = sys.argv[5] # use this if you are test an images already in the 
 intrinsics_matrix_path = sys.argv[6]
 # run_soft_posit = sys.argv[5]
 
+# TODO: You will need to also add the direct matcher feature builder here!!
+
 query_image_arg_no_ext = query_image_arg.split(".")[0]
 
 os.system("mkdir results/")
