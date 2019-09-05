@@ -114,7 +114,6 @@ if benchmarking == "1":
 final_match_array = image_retrieval_matching(query_keypoints_xy_descriptors, data_dir, similar_images_names)
 final_match_array_direct = direct_matching(query_keypoints_xy_descriptors)
 
-
 intrinsics_matrix = np.loadtxt(intrinsics_matrix_path)
 
 # for IMG_7932.JPG
