@@ -50,9 +50,12 @@ for i = 1:len(1)
     rotations_errors(i) = r_error;
 end
 
-% bar(trans_errors);
-% bar(rotations_errors);
-% bar(angle_errors);
+% bar(trans_errors); % distance
+% bar(rotations_errors); % axis
+% bar(angle_errors); % angle
+% title('Errors Normalised (variance = 1)', 'FontSize', 16 );
+% xlabel('Image File Index', 'FontSize', 16 );
+% ylabel('MSE', 'FontSize', 16 );
 
 trans_errors_norm = (trans_errors - mean(trans_errors)) ./ std(trans_errors);
 rotations_errors_norm = (rotations_errors - mean(rotations_errors)) ./ std(rotations_errors);
@@ -60,10 +63,10 @@ angle_errors_norm = (angle_errors - mean(angle_errors)) ./ std(angle_errors);
 
 scatter3(trans_errors_norm, rotations_errors_norm, angle_errors_norm, 80, 'filled');
 
-title('Errors Normalised (variance = 1)', 'FontSize', 20 );
-xlabel('Translation Errors', 'FontSize', 20 );
-ylabel('Rotation Errors', 'FontSize', 20 );
-zlabel('Angle Errors', 'FontSize', 20 );
+title('Errors Normalised (variance = 1)', 'FontSize', 16 );
+xlabel('Translation Errors', 'FontSize', 16 );
+ylabel('Rotation Errors', 'FontSize', 16 );
+zlabel('Angle Errors', 'FontSize', 16 );
 
 % List of images..
 % Getting info for.. IMG_8023

@@ -43,24 +43,27 @@ def blob_to_array(blob, dtype, shape=(-1,)):
 def truncate(f, n):
     return math.floor(f * 10 ** n) / 10 ** n
 
-db_query = COLMAPDatabase.connect(query_image_database)
-db_model = COLMAPDatabase.connect(model_images_database)
+if benchmarking == "1":
+    db = COLMAPDatabase.connect(model_images_database)
+else:
+    db = COLMAPDatabase.connect(query_image_database)
+
 
 # Note: the sift features should be extracted from COLMAP so they match the ones from the SFM dataset
 # Another note: same query name just using different databases for the ids
-query_image_id_data = db_query.execute("SELECT image_id FROM images WHERE name = "+ "'" + query_image_name_with_ext + "'")
+query_image_id_data = db.execute("SELECT image_id FROM images WHERE name = "+ "'" + query_image_name_with_ext + "'")
 query_image_id = str(query_image_id_data.fetchone()[0])
 
-query_image_keypoints_data = db_query.execute("SELECT data FROM keypoints WHERE image_id = "+ "'" + query_image_id + "'")
+query_image_keypoints_data = db.execute("SELECT data FROM keypoints WHERE image_id = "+ "'" + query_image_id + "'")
 query_image_keypoints_data = query_image_keypoints_data.fetchone()[0]
-query_image_keypoints_data_cols = db_query.execute("SELECT cols FROM keypoints WHERE image_id = "+ "'" + query_image_id + "'")
+query_image_keypoints_data_cols = db.execute("SELECT cols FROM keypoints WHERE image_id = "+ "'" + query_image_id + "'")
 query_image_keypoints_data_cols = int(query_image_keypoints_data_cols.fetchone()[0])
 query_image_keypoints_data = blob_to_array(query_image_keypoints_data, np.float32)
 query_image_keypoints_data_rows = np.shape(query_image_keypoints_data)[0]/query_image_keypoints_data_cols
 query_image_keypoints_data = query_image_keypoints_data.reshape(query_image_keypoints_data_rows, query_image_keypoints_data_cols)
 query_image_keypoints_data_xy = query_image_keypoints_data[:,0:2]
 
-query_image_descriptors_data = db_query.execute("SELECT data FROM descriptors WHERE image_id = "+ "'" + query_image_id + "'")
+query_image_descriptors_data = db.execute("SELECT data FROM descriptors WHERE image_id = "+ "'" + query_image_id + "'")
 query_image_descriptors_data = query_image_descriptors_data.fetchone()[0]
 query_image_descriptors_data = blob_to_array(query_image_descriptors_data, np.uint8)
 descs_rows = np.shape(query_image_descriptors_data)[0]/128
@@ -86,7 +89,7 @@ if benchmarking == "1":
     lines = lines[4:] #skip comments
     f.close()
 
-    model_image_id_data = db_model.execute("SELECT image_id FROM images WHERE name = "+ "'" + query_image_name_with_ext + "'")
+    model_image_id_data = db.execute("SELECT image_id FROM images WHERE name = "+ "'" + query_image_name_with_ext + "'")
     model_image_id = str(model_image_id_data.fetchone()[0])
 
     for i in range(0,len(lines),2):

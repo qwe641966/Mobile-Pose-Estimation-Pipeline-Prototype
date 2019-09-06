@@ -57,8 +57,8 @@ for fname in glob.glob(path):
         ground_truth_rotation_quarternion = quarternion
         ground_truth_trans = np.array([tx, ty, tz]).astype(np.float64)
 
-        translation_vector_calculated = np.loadtxt("results/"+fname+"/pnp_ransac_translation_vector.txt")
-        rotation_vector_calculated = np.loadtxt("results/"+fname+"/pnp_ransac_rotation_vector.txt")
+        translation_vector_calculated = np.loadtxt("results/"+fname+"/pnp_ransac_translation_vector_image_retrieval.txt")
+        rotation_vector_calculated = np.loadtxt("results/"+fname+"/pnp_ransac_rotation_vector_image_retrieval.txt")
 
         row = np.concatenate((ground_truth_rotation_quarternion, ground_truth_trans, rotation_vector_calculated, translation_vector_calculated), axis=0)
         row = row.reshape([1,13])
