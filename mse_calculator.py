@@ -27,7 +27,7 @@ lines = f.readlines()
 lines = lines[4:] #skip comments
 f.close()
 
-mse_data = np.empty((0, 13))
+mse_data = np.empty((0, 14))
 
 index = 1;
 for fname in glob.glob(path):
@@ -54,27 +54,24 @@ for fname in glob.glob(path):
         ty = image_first_line[6]
         tz = image_first_line[7]
 
-        quarternion = np.array([qw, qx, qy, qz])
-
-        ground_truth_rotation_quarternion = quarternion
+        ground_truth_rotation_quarternion = np.array([qw, qx, qy, qz]) #same as matlab
         ground_truth_trans = np.array([tx, ty, tz]).astype(np.float64)
 
-        pdb.set_trace()
-
         # switch between direct and image retrieval
-        translation_vector_est_direct = np.loadtxt("results/"+fname+"/pnp_ransac_translation_vector_direct.txt")
         rotation_vector_est_direct = np.loadtxt("results/"+fname+"/pnp_ransac_rotation_vector_direct.txt")
+        translation_vector_est_direct = np.loadtxt("results/"+fname+"/pnp_ransac_translation_vector_direct.txt")
 
         # convert rotation vector to quarternion because of matlab
-        # rotation_matrix_est_direct = cv2.Rodrigues(rotation_vector_est_direct)[0]
-        # scipy_rotation = R.from_dcm(rotation_matrix_est_direct)
-        # scipy_rotation_quat = scipy_rotation.as_quat()
-        # pdb.set_trace()
+        rotation_matrix_est_direct = cv2.Rodrigues(rotation_vector_est_direct)[0] # [1] is a jacobian matrix
+        scipy_rotation = R.from_dcm(rotation_matrix_est_direct)
+        scipy_rotation_quat = scipy_rotation.as_quat()
+        # matlab format
+        est_rotation_quarternion = np.array([ scipy_rotation_quat[3], scipy_rotation_quat[0], scipy_rotation_quat[1], scipy_rotation_quat[2]])
 
-        row = np.concatenate((ground_truth_rotation_quarternion, ground_truth_trans, rotation_vector_est_direct, translation_vector_est_direct), axis=0)
-        row = row.reshape([1,13])
+        row = np.concatenate((ground_truth_rotation_quarternion, ground_truth_trans, est_rotation_quarternion, translation_vector_est_direct), axis=0)
+        row = row.reshape([1,14])
         mse_data = np.concatenate((mse_data, row), axis=0)
         index = index + 1
 
 mse_data = mse_data.astype(np.float64)
-sio.savemat('mse_data.mat', {'value':mse_data})
+sio.savemat('mse_data.mat', {'value' : mse_data})
