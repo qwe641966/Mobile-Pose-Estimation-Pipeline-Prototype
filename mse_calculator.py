@@ -5,6 +5,8 @@ import numpy as np
 import sqlite3
 import sys
 import scipy.io as sio
+import cv2
+from scipy.spatial.transform import Rotation as R
 
 # use this path to get the mses again
 path = "results/*"
@@ -57,10 +59,19 @@ for fname in glob.glob(path):
         ground_truth_rotation_quarternion = quarternion
         ground_truth_trans = np.array([tx, ty, tz]).astype(np.float64)
 
-        translation_vector_calculated = np.loadtxt("results/"+fname+"/pnp_ransac_translation_vector_image_retrieval.txt")
-        rotation_vector_calculated = np.loadtxt("results/"+fname+"/pnp_ransac_rotation_vector_image_retrieval.txt")
+        pdb.set_trace()
 
-        row = np.concatenate((ground_truth_rotation_quarternion, ground_truth_trans, rotation_vector_calculated, translation_vector_calculated), axis=0)
+        # switch between direct and image retrieval
+        translation_vector_est_direct = np.loadtxt("results/"+fname+"/pnp_ransac_translation_vector_direct.txt")
+        rotation_vector_est_direct = np.loadtxt("results/"+fname+"/pnp_ransac_rotation_vector_direct.txt")
+
+        # convert rotation vector to quarternion because of matlab
+        # rotation_matrix_est_direct = cv2.Rodrigues(rotation_vector_est_direct)[0]
+        # scipy_rotation = R.from_dcm(rotation_matrix_est_direct)
+        # scipy_rotation_quat = scipy_rotation.as_quat()
+        # pdb.set_trace()
+
+        row = np.concatenate((ground_truth_rotation_quarternion, ground_truth_trans, rotation_vector_est_direct, translation_vector_est_direct), axis=0)
         row = row.reshape([1,13])
         mse_data = np.concatenate((mse_data, row), axis=0)
         index = index + 1

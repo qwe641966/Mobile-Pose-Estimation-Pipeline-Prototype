@@ -28,8 +28,20 @@ no_points3D = np.shape(points3D)[0]
 ones = np.ones(no_points3D)
 ones = ones.reshape(no_points3D,1)
 points3D = np.concatenate((points3D, ones), axis=1) #make homogeneous
+points3D = np.transpose(points3D)
 
-points2D_projected = np.dot(np.dot(intrinsic_matrix, np.concatenate((pnp_ransac_rot, pnp_ransac_trans.reshape([3,1])),axis=1)), np.transpose(points3D))
+rt = np.concatenate((pnp_ransac_rot, pnp_ransac_trans.reshape([3,1])),axis=1)
+bottom_row = np.array([0,0,0,1]).reshape([1,4])
+rt = np.concatenate((rt, bottom_row), axis=0) #make homogeneous
+np.savetxt("results/"+query_image_name+"/RT.txt", np.around(rt, decimals=4), fmt='%f')
+
+rt_points3D = np.dot(rt, points3D)
+
+np.savetxt("results/"+query_image_name+"/RT_3Dpoints.txt", np.around(np.transpose(rt_points3D), decimals=4), fmt='%f')
+
+rt_points3D = rt_points3D[0:3,:] #un-make homogeneous
+
+points2D_projected = np.dot(intrinsic_matrix, rt_points3D)
 points2D_projected = np.transpose(points2D_projected)
 points2D_projected = points2D_projected / points2D_projected[:,2].reshape(no_points3D,1)
 points2D_projected = np.round(points2D_projected)

@@ -28,7 +28,7 @@ def direct_matching(query_keypoints_xy_descriptors):
 
     good = get_good_matches(matches)
 
-    print "found this many good matches direct: " + str(np.shape(good))
+    print "found this many good matches direct: " + str(np.shape(good)[0])
 
     final_match_array_direct = np.empty((0, 5))
     for good_match in good:
@@ -37,7 +37,7 @@ def direct_matching(query_keypoints_xy_descriptors):
         final_match_array_row = np.concatenate((query_keypoints_xy_descriptors[queryIndex,0:2], train_descriptors_direct_match[trainIndex,129:132]) , axis = 0)
         final_match_array_direct = np.concatenate((final_match_array_direct, final_match_array_row.reshape([1,5])), axis = 0)
 
-    return final_match_array_direct
+    return final_match_array_direct, np.shape(good)[0]
 
 # # ..or FLANN
 # FLANN_INDEX_KDTREE = 0

@@ -34,7 +34,7 @@ def image_retrieval_matching(query_keypoints_xy_descriptors, data_dir, similar_i
 
     good = get_good_matches(matches)
 
-    print "found this many good matches: " + str(np.shape(good))
+    print "found this many good matches: " + str(np.shape(good)[0])
 
     final_match_array = np.empty((0, 5))
     for good_match in good:
@@ -44,7 +44,7 @@ def image_retrieval_matching(query_keypoints_xy_descriptors, data_dir, similar_i
         final_match_array = np.concatenate((final_match_array, final_match_array_row.reshape([1,5])), axis = 0)
 
 
-    return final_match_array
+    return final_match_array, np.shape(good)[0]
 
 # # ..or FLANN
 # FLANN_INDEX_KDTREE = 0

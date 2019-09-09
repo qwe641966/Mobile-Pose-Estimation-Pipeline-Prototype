@@ -114,29 +114,17 @@ if benchmarking == "1":
     ground_truth_trans = np.array([tx, ty, tz]).astype(np.float64)
     ground_truth_P = np.concatenate((ground_truth_rotation, ground_truth_trans.reshape([3,1])), axis =1)
 
-final_match_array = image_retrieval_matching(query_keypoints_xy_descriptors, data_dir, similar_images_names)
-final_match_array_direct = direct_matching(query_keypoints_xy_descriptors)
+final_match_array, image_retrieval_good_matches_no = image_retrieval_matching(query_keypoints_xy_descriptors, data_dir, similar_images_names)
+final_match_array_direct, direct_good_matches_no = direct_matching(query_keypoints_xy_descriptors)
 
 intrinsics_matrix = np.loadtxt(intrinsics_matrix_path)
 
-# for IMG_7932.JPG
-# intrinsics_matrix = np.array([ [3492,    0,    2003],
-#                                [0,      3482,  1523],
-#                                [0,        0,     1  ]], dtype = "float")
-
-# for google_ar1.JPG - WRONG!
-# intrinsics_matrix = np.array([ [507.69,    0,    320.08],
-#                                [0,      507.62,  238.19],
-#                                [0,         0,       1  ]], dtype = "float")
-
-# for google_arcore*.JPG
-# intrinsics_matrix = np.array([ [1015,    0,     640],
-#                                [0,      1015,   356],
-#                                [0,        0,     1  ]], dtype = "float")
-
 np.savetxt("results/"+query_image_name+"/final_match_array.txt", final_match_array_direct)
+np.savetxt("results/"+query_image_name+"/3D_points_only.txt", np.around(final_match_array_direct[:,2:5],  decimals=4),  fmt='%f')
+
 np.savetxt("results/"+query_image_name+"/intrinsics_matrix.txt", intrinsics_matrix)
 
+# TODO: get ratio of ransanc correspondences/inliers?
 (_, pnp_ransac_rotation_vector_image_retrieval, pnp_ransac_translation_vector_image_retrieval, inliers_image_retrieval) = cv2.solvePnPRansac(final_match_array[:,2:5], final_match_array[:,0:2], intrinsics_matrix, None, iterationsCount = 500, confidence = 0.99, flags = cv2.SOLVEPNP_EPNP)
 (_, pnp_ransac_rotation_vector_direct, pnp_ransac_translation_vector_direct, inliers_direct) = cv2.solvePnPRansac(final_match_array_direct[:,2:5], final_match_array_direct[:,0:2], intrinsics_matrix, None, iterationsCount = 500, confidence = 0.99, flags = cv2.SOLVEPNP_EPNP)
 
@@ -144,11 +132,13 @@ if inliers_image_retrieval is None:
     print "NO inliers from image retrieval!"
 else:
     print "RANSAC inliers inliers_image_retrieval " + str(np.shape(inliers_image_retrieval)[0])
+    print "RANSAC inliers to matches inliers_image_retrieval ratio " + str(np.shape(inliers_image_retrieval)[0]) + "/" + str(image_retrieval_good_matches_no)
 
 if inliers_direct is None:
     print "NO inliers from direct matching!"
 else:
     print "RANSAC inliers direct " + str(np.shape(inliers_direct)[0])
+    print "RANSAC inliers to matches direct ratio " + str(np.shape(inliers_direct)[0]) + "/" + str(direct_good_matches_no)
 
 np.savetxt("results/"+query_image_name+"/pnp_ransac_rotation_vector_image_retrieval.txt", pnp_ransac_rotation_vector_image_retrieval)
 np.savetxt("results/"+query_image_name+"/pnp_ransac_translation_vector_image_retrieval.txt", pnp_ransac_translation_vector_image_retrieval)
