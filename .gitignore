@@ -7,3 +7,6 @@ videos
 video_data
 direct_matching_results
 results*
+*.pyc
+*.m~
+*.mat
