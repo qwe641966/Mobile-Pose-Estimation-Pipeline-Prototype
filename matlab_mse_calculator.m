@@ -7,17 +7,10 @@ ground_truths_rotation_quarternions = mse_data(:,1:4);
 rotation_matrices_gt = quat2rotm(ground_truths_rotation_quarternions);
 translations_gt = mse_data(:,5:7);
 
-%estimated calculations
-rotation_vectors_calculated = mse_data(:,8:10);
-translations_est = mse_data(:,11:13);
-
-len = size(rotation_vectors_calculated);
-rotation_matrices_est = [];
-
-for i = 1:len(1)
-    rot_vector = rotation_vectors_calculated(i,:);
-	rotation_matrices_est(:,:,i) = rotationVectorToMatrix(rot_vector);
-end
+%est values
+est_rotation_quarternions = mse_data(:,8:11);
+rotation_matrices_est = quat2rotm(est_rotation_quarternions);
+translations_est = mse_data(:,12:14);
 
 % The first three elements of every row specify the rotation axis, 
 % and the last element defines the rotation angle (in radians).
@@ -65,10 +58,10 @@ bar(camera_center_errors); % camera center's error
 % 2D errors
 % bar(trans_errors); % distance
 % bar(rotations_errors); % axis
-% bar(angle_errors); % angle
-title('Errors Normalised (variance = 1)', 'FontSize', 16 );
-xlabel('Image File Index', 'FontSize', 16 );
-ylabel('MSE', 'FontSize', 16 );
+%  bar(angle_errors); % angle
+% title('Errors Normalised (variance = 1)', 'FontSize', 16 );
+% xlabel('Image File Index', 'FontSize', 16 );
+% ylabel('MSE', 'FontSize', 16 );
 
 % 3D Errors
 % trans_errors_norm = (trans_errors - mean(trans_errors)) ./ std(trans_errors);

@@ -115,7 +115,7 @@ if benchmarking == "1":
     ground_truth_P = np.concatenate((ground_truth_rotation, ground_truth_trans.reshape([3,1])), axis =1)
 
 final_match_array, image_retrieval_good_matches_no = image_retrieval_matching(query_keypoints_xy_descriptors, data_dir, similar_images_names)
-final_match_array_direct, direct_good_matches_no = direct_matching(query_keypoints_xy_descriptors)
+final_match_array_direct, direct_good_matches_no = direct_matching(data_dir,query_keypoints_xy_descriptors)
 
 intrinsics_matrix = np.loadtxt(intrinsics_matrix_path)
 

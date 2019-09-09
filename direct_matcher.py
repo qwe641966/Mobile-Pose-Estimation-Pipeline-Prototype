@@ -14,11 +14,11 @@ def get_good_matches(matches): #Lowe's ratio test
             good.append([m])
     return good
 
-def direct_matching(query_keypoints_xy_descriptors):
+def direct_matching(data_dir,query_keypoints_xy_descriptors):
 
     query_descriptors = query_keypoints_xy_descriptors[:,2:130]
 
-    train_descriptors_direct_match = np.loadtxt('direct_matching_results/averages_3Dpoints_xyz.txt')
+    train_descriptors_direct_match = np.loadtxt(data_dir+"/direct_matching_results/averages_3Dpoints_xyz.txt")
     train_descriptors_direct_match = train_descriptors_direct_match.astype(np.float32)
 
     print "matching.. direct.."

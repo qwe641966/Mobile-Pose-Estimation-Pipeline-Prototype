@@ -11,7 +11,8 @@ import pdb
 # This script should return a text file with all the 3D points and their
 # SIFT average and their id. Each row will be [SIFT average, point id, xyz]
 
-database_dir = sys.argv[1]
+data_dir = sys.argv[1]
+database_dir = data_dir+"/model_images_database"
 
 IS_PYTHON3 = sys.version_info[0] >= 3
 
@@ -127,4 +128,5 @@ for i in range(np.shape(points3D)[0]):
         points3Did_average_xyz = np.concatenate((points3Did_average_xyz, elem), axis=0)
 
 print "Writing to file..."
-np.savetxt("direct_matching_results/averages_3Dpoints_xyz.txt", points3Did_average_xyz)
+os.system("mkdir "+data_dir+"/direct_matching_results")
+np.savetxt(data_dir+"/direct_matching_results/averages_3Dpoints_xyz.txt", points3Did_average_xyz)
