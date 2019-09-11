@@ -33,8 +33,8 @@ if(create_correspondences == '1'):
 
 if(run_direct_matching_3D_points_feature_builder == '1'):
     print "Creating Direct Matching 3D features matches"
-    print "python2.7 direct_matching_3D_points_feature_builder.py "+data_dir+"/model_images_database"
-    os.system("python2.7 direct_matching_3D_points_feature_builder.py "+data_dir+"/model_images_database")
+    print "python2.7 direct_matching_3D_points_feature_builder.py "+data_dir
+    os.system("python2.7 direct_matching_3D_points_feature_builder.py "+data_dir)
 
 print "Running script 1/4"
 print "python2.7 image_retrieval_query_image.py "+data_dir+"/query_images/"+query_image_arg

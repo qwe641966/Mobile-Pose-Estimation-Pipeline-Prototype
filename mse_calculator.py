@@ -32,7 +32,8 @@ mse_data = np.empty((0, 14))
 index = 1;
 for fname in glob.glob(path):
     fname = fname.split('/')[1]
-    if len(fname) == 8:
+
+    if len(fname) == 8: # pick up only images!
         model_image_id_data = db_model.execute("SELECT image_id FROM images WHERE name = "+ "'" + fname + ".JPG'")
         model_image_id = str(model_image_id_data.fetchone()[0])
 
