@@ -15,5 +15,4 @@ benchmarking = '1'
 
 for fname in glob.glob(query_images_dir): # change accordingly
     fname = fname.split('/')[3]
-    print fname
     os.system("python2.7 get_pose.py 0 0 "+fname+" "+ data_dir +" "+benchmarking+" " +intrinsics_matrix+ " 0")

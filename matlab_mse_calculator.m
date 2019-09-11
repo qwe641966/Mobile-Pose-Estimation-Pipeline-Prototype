@@ -54,6 +54,9 @@ for i = 1:len(1)
 end
 
 bar(camera_center_errors); % camera center's error
+title('Camera Center Errors', 'FontSize', 16 );
+xlabel('Image File Index', 'FontSize', 16 );
+ylabel('MSE', 'FontSize', 16 );
 
 % 2D errors
 % bar(trans_errors); % distance
