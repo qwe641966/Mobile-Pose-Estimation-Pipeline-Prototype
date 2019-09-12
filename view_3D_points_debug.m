@@ -2,6 +2,8 @@ colmap_worldPoints_before_RT_from_direct = importdata('results/IMG_7944/3D_point
 colmap_worldPoints_after_RT_from_direct = importdata('results/IMG_7944/3Dpoints_after_RT_multiplication.txt');
 cam_est_rotation_vector = importdata('results/IMG_7944/pnp_ransac_rotation_vector_direct.txt');
 cam_est_trans_vector = importdata('results/IMG_7944/pnp_ransac_translation_vector_direct.txt');
+% all_3d_points = importdata('data/coop3/sparse_model/points3D.txt');
+ar
 
 R = [0.998500 -0.006900 -0.053600;
      0.009600 0.998700 0.049200;
