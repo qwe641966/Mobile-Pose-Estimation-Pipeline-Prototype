@@ -7,11 +7,11 @@ import pdb
 
 build_retrieval_database = sys.argv[1]
 create_correspondences = sys.argv[2]
-query_image_arg = sys.argv[3] # i.e IMG_7932.JPG
-data_dir = sys.argv[4] # i.e data/coop3
-benchmarking  = sys.argv[5] # use this if you are test an images already in the dataset
+run_direct_matching_3D_points_feature_builder = sys.argv[3]
+query_image_arg = sys.argv[4] # i.e IMG_7932.JPG
+data_dir = sys.argv[5] # i.e data/coop3
 intrinsics_matrix_path = sys.argv[6]
-run_direct_matching_3D_points_feature_builder = sys.argv[7]
+benchmarking  = sys.argv[7] # use this if you are test an images already in the dataset
 
 # run_soft_posit = sys.argv[5]
 
