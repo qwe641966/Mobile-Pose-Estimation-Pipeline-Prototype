@@ -4,7 +4,9 @@
 %     est_rotation_quarternion_image_retrieval, translation_vector_image_retrieval, 
 %     ransac_est_direct, ransac_est_image_retrieval
 %     IMG_[number], the number i.e IMG_8067 is 8067
-mse_data = load('mse_data.mat');
+data_dir = 'data/coop3';
+mse_data_location = join([data_dir,'/mse_data.mat']);
+mse_data = load(mse_data_location);
 mse_data = mse_data.value;
 
 names = mse_data(:,24);
