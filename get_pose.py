@@ -51,5 +51,5 @@ os.system("python2.7 query_matcher_improved_ransac.py "+data_dir+" "+query_image
 #     print 'Running softposit script'
 #     run matlab script here
 print "Running script 4/4"
-print "python2.7 visualizer.py "+data_dir+"/query_images/"+query_image_arg + " " + intrinsics_matrix_path
-os.system("python2.7 visualizer.py "+data_dir+"/query_images/"+query_image_arg + " " + intrinsics_matrix_path)
+print "python2.7 visualizer.py "+data_dir+"/query_images/"+query_image_arg + " " + benchmarking
+os.system("python2.7 visualizer.py "+data_dir+"/query_images/"+query_image_arg + " " + benchmarking)
