@@ -99,7 +99,7 @@ set(gca,'XTick',[1:len(1)],'xticklabel', names);
 xtickangle(90);
 title('Camera Center Errors - DM', 'FontSize', 16 );
 xlabel('Image File Index', 'FontSize', 16 );
-ylabel('RMSE', 'FontSize', 16 );
+ylabel('Error between centers', 'FontSize', 16 );
 
 figure;
 
@@ -108,7 +108,7 @@ set(gca,'XTick',[1:len(1)],'xticklabel', names);
 xtickangle(90);
 title('Camera Center Errors - Image Retrieval', 'FontSize', 16 );
 xlabel('Image File Index', 'FontSize', 16 );
-ylabel('RMSE', 'FontSize', 16 );
+ylabel('Error between centers', 'FontSize', 16 );
 
 figure;
 
@@ -117,7 +117,7 @@ set(gca,'XTick',[1:len(1)],'xticklabel', names);
 xtickangle(90);
 title('Translation Errors - DM', 'FontSize', 16 );
 xlabel('Image File Index', 'FontSize', 16 );
-ylabel('RMSE', 'FontSize', 16 );
+ylabel('RMSE (norm)', 'FontSize', 16 );
 
 figure;
 
@@ -126,7 +126,7 @@ set(gca,'XTick',[1:len(1)],'xticklabel', names);
 xtickangle(90);
 title('Angle Errors - DM', 'FontSize', 16 );
 xlabel('Image File Index', 'FontSize', 16 );
-ylabel('RMSE', 'FontSize', 16 );
+ylabel('RMSE (norm)', 'FontSize', 16 );
 
 figure;
 
@@ -135,7 +135,7 @@ set(gca,'XTick',[1:len(1)],'xticklabel', names);
 xtickangle(90);
 title('Rotation Axis Errors - DM', 'FontSize', 16 );
 xlabel('Image File Index', 'FontSize', 16 );
-ylabel('RMSE', 'FontSize', 16 );
+ylabel('RMSE (norm)', 'FontSize', 16 );
 
 figure;
 
@@ -144,7 +144,7 @@ set(gca,'XTick',[1:len(1)],'xticklabel', names);
 xtickangle(90);
 title('Translation Errors - Image Retrieval', 'FontSize', 16 );
 xlabel('Image File Index', 'FontSize', 16 );
-ylabel('RMSE', 'FontSize', 16 );
+ylabel('RMSE (norm)', 'FontSize', 16 );
 
 figure;
 
@@ -153,7 +153,7 @@ set(gca,'XTick',[1:len(1)],'xticklabel', names);
 xtickangle(90);
 title('Angle Errors - Image Retrieval', 'FontSize', 16 );
 xlabel('Image File Index', 'FontSize', 16 );
-ylabel('RMSE', 'FontSize', 16 );
+ylabel('RMSE (norm)', 'FontSize', 16 );
 
 figure;
 
@@ -162,7 +162,7 @@ set(gca,'XTick',[1:len(1)],'xticklabel', names);
 xtickangle(90);
 title('Rotation Axis Errors - Image Retrieval', 'FontSize', 16 );
 xlabel('Image File Index', 'FontSize', 16 );
-ylabel('RMSE', 'FontSize', 16 );
+ylabel('RMSE (norm)', 'FontSize', 16 );
 
 figure;
 
@@ -171,7 +171,7 @@ set(gca,'XTick',[1:len(1)],'xticklabel', names);
 xtickangle(90);
 title('Ransac Inliers Percentage - DM', 'FontSize', 16 );
 xlabel('Image File Index', 'FontSize', 16 );
-ylabel('RMSE', 'FontSize', 16 );
+ylabel('Percentage', 'FontSize', 16 );
 
 figure;
 
@@ -180,7 +180,7 @@ set(gca,'XTick',[1:len(1)],'xticklabel', names);
 xtickangle(90);
 title('Ransac Inliers Percentage - Image Retrieval', 'FontSize', 16 );
 xlabel('Image File Index', 'FontSize', 16 );
-ylabel('RMSE', 'FontSize', 16 );
+ylabel('Percentage', 'FontSize', 16 );
 
 % 3D Errors
 % trans_errors_norm = (trans_errors - mean(trans_errors)) ./ std(trans_errors);

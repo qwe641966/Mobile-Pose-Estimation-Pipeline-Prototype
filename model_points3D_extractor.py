@@ -8,8 +8,7 @@ import os
 import math
 import pdb
 
-# This script should return a text file with all the 3D points and their
-# SIFT average and their id. Each row will be [SIFT average, point id, xyz]
+#  This will get just the [x,y,z] from the sparse_model folder/model
 
 data_dir = sys.argv[1]
 

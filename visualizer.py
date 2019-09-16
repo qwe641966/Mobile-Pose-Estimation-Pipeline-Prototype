@@ -19,7 +19,7 @@ img = cv2.imread(query_image_path)
 for i in range(rows):
     x = int(points2D_projected_direct_matching[i][0])
     y = int(points2D_projected_direct_matching[i][1])
-    center = (x,y)
+    center = (x, y)
     # center = (np.shape(img)[1]-y,x) # weird matlab to python indexing..
     # print "x: " + str(center[0]) + ", y: " + str(center[1])
     cv2.circle(img, center, 2, (0, 0, 255), -1)
@@ -33,7 +33,7 @@ img = cv2.imread(query_image_path)
 for i in range(rows):
     x = int(points2D_projected_image_retrieval[i][0])
     y = int(points2D_projected_image_retrieval[i][1])
-    center = (x,y)
+    center = (x, y)
     # center = (np.shape(img)[1]-y,x) # weird matlab to python indexing..
     # print "x: " + str(center[0]) + ", y: " + str(center[1])
     cv2.circle(img, center, 2, (0, 0, 255), -1)

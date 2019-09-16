@@ -120,8 +120,8 @@ final_match_array_direct, direct_good_matches_no = direct_matching(data_dir,quer
 
 intrinsics_matrix = np.loadtxt(intrinsics_matrix_path)
 
-np.savetxt("results/"+query_image_name+"/final_match_array_image_retrieval_matching.txt", final_match_array_image_retrieval)
-np.savetxt("results/"+query_image_name+"/3D_points_only_image_retrieval_matching.txt", np.around(final_match_array_image_retrieval[:,2:5],  decimals=4),  fmt='%f')
+np.savetxt("results/"+query_image_name+"/final_match_array_image_retrieval.txt", final_match_array_image_retrieval)
+np.savetxt("results/"+query_image_name+"/3D_points_image_retrieval.txt", np.around(final_match_array_image_retrieval[:,2:5],  decimals=4),  fmt='%f')
 
 np.savetxt("results/"+query_image_name+"/final_match_array_direct.txt", final_match_array_direct)
 np.savetxt("results/"+query_image_name+"/3D_points_direct.txt", np.around(final_match_array_direct[:,2:5],  decimals=4),  fmt='%f')
@@ -190,7 +190,7 @@ img = cv2.imread(query_image_path)
 np.savetxt("results/"+query_image_name+"/points2D_projected_direct_matching.txt", points2D_projected_direct_matching)
 
 # Image Retrieval
-points_correspondences_image_retrieval = np.loadtxt("results/"+query_image_name+"/final_match_array_image_retrieval_matching.txt")
+points_correspondences_image_retrieval = np.loadtxt("results/"+query_image_name+"/final_match_array_image_retrieval.txt")
 points3D_image_retrieval = points_correspondences_image_retrieval[:,2:5]
 pnp_ransac_rot_image_retrieval = np.loadtxt("results/"+query_image_name+"/pnp_ransac_rotation_vector_image_retrieval.txt")
 pnp_ransac_trans_image_retrieval = np.loadtxt("results/"+query_image_name+"/pnp_ransac_translation_vector_image_retrieval.txt")
@@ -205,7 +205,7 @@ points3D_image_retrieval = np.transpose(points3D_image_retrieval)
 rt_image_retrieval = np.concatenate((pnp_ransac_rot_image_retrieval, pnp_ransac_trans_image_retrieval.reshape([3,1])),axis=1)
 bottom_row = np.array([0,0,0,1]).reshape([1,4])
 rt_image_retrieval = np.concatenate((rt_image_retrieval, bottom_row), axis=0) #make homogeneous
-np.savetxt("results/"+query_image_name+"/RT_image_retrieval", np.around(rt_image_retrieval, decimals=4), fmt='%f')
+np.savetxt("results/"+query_image_name+"/RT_image_retrieval.txt", np.around(rt_image_retrieval, decimals=4), fmt='%f')
 
 rt_points3D_image_retrieval = np.dot(rt_image_retrieval, points3D_image_retrieval)
 rt_points3D_image_retrieval = rt_points3D_image_retrieval[0:3,:] #un-make homogeneous
@@ -217,4 +217,3 @@ points2D_projected_image_retrieval = np.round(points2D_projected_image_retrieval
 points2D_projected_image_retrieval = points2D_projected_image_retrieval[:,0:2]
 
 np.savetxt("results/"+query_image_name+"/points2D_projected_image_retrieval.txt", points2D_projected_image_retrieval)
-
