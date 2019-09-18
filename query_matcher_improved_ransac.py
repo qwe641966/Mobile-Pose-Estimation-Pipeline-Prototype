@@ -8,6 +8,7 @@ import os
 import math
 from direct_matcher import direct_matching
 from image_retrieval_matcher import image_retrieval_matching
+from scipy.spatial.transform import Rotation as R
 
 # This file will return the camera intrinsics of the query image and also the
 # initial rotation and translation from the similar image to the query image in the database.
@@ -170,6 +171,10 @@ ones = ones.reshape(no_points3D_direct_matching,1)
 points3D_direct_matching = np.concatenate((points3D_direct_matching, ones), axis=1) #make homogeneous
 points3D_direct_matching = np.transpose(points3D_direct_matching)
 
+pnp_ransac_rot_direct_matching_for_quat = R.from_dcm(pnp_ransac_rot_direct_matching)
+pnp_ransac_rot_direct_matching_as_quat = pnp_ransac_rot_direct_matching_for_quat.as_quat() # .as_quat() returns: (x, y, z, w)
+np.savetxt("results/"+query_image_name+"/rotation_direct_matching_as_quaternion.txt", pnp_ransac_rot_direct_matching_as_quat)
+
 rt_direct_matching = np.concatenate((pnp_ransac_rot_direct_matching, pnp_ransac_trans_direct_matching.reshape([3,1])),axis=1)
 bottom_row = np.array([0,0,0,1]).reshape([1,4])
 rt_direct_matching = np.concatenate((rt_direct_matching, bottom_row), axis=0) #make homogeneous
@@ -201,6 +206,10 @@ ones = np.ones(no_points3D_image_retrieval)
 ones = ones.reshape(no_points3D_image_retrieval,1)
 points3D_image_retrieval = np.concatenate((points3D_image_retrieval, ones), axis=1) #make homogeneous
 points3D_image_retrieval = np.transpose(points3D_image_retrieval)
+
+pnp_ransac_rot_image_retrieval_for_quat = R.from_dcm(pnp_ransac_rot_image_retrieval)
+pnp_ransac_rot_image_retrieval_as_quat = pnp_ransac_rot_image_retrieval_for_quat.as_quat() # .as_quat() returns: (x, y, z, w)
+np.savetxt("results/"+query_image_name+"/rotation_image_retrieval_as_quaternion.txt", pnp_ransac_rot_image_retrieval_as_quat)
 
 rt_image_retrieval = np.concatenate((pnp_ransac_rot_image_retrieval, pnp_ransac_trans_image_retrieval.reshape([3,1])),axis=1)
 bottom_row = np.array([0,0,0,1]).reshape([1,4])

@@ -40,6 +40,6 @@ for i in range(rows):
 
 cv2.imwrite("results/" + query_image_name + "_result_image_retrieval.png",img)
 
-if(benchmarking != "1"):
-    os.system("open results/" + query_image_name + "_result_direct_matching.png")
-    os.system("open results/" + query_image_name + "_result_image_retrieval.png")
+# if(benchmarking != "1"):
+    # os.system("open results/" + query_image_name + "_result_direct_matching.png")
+    # os.system("open results/" + query_image_name + "_result_image_retrieval.png")
