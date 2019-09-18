@@ -25,7 +25,7 @@ intrinsics_matrix_path = sys.argv[4]
 query_image_name = query_image_name_with_ext.split(".")[0]
 query_image_path = data_dir+"/query_images/"+query_image_name_with_ext
 
-query_image_database = data_dir +"/query_images_databases/database_for_"+query_image_name+".db"
+query_image_database = data_dir +"/query_images_databases/database_for_"+query_image_name+".db" # need to remove this at the end
 model_images_database = data_dir +"/model_images_database/database.db"
 
 IS_PYTHON3 = sys.version_info[0] >= 3
@@ -226,3 +226,6 @@ points2D_projected_image_retrieval = np.round(points2D_projected_image_retrieval
 points2D_projected_image_retrieval = points2D_projected_image_retrieval[:,0:2]
 
 np.savetxt("results/"+query_image_name+"/points2D_projected_image_retrieval.txt", points2D_projected_image_retrieval)
+
+# Clean up
+os.system("rm "+data_dir+"/query_images_databases/*") #this is done so new pics with the same name can be used (otherwise the previous database is used..)

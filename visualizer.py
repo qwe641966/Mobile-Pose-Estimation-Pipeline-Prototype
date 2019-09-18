@@ -22,7 +22,7 @@ for i in range(rows):
     center = (x, y)
     # center = (np.shape(img)[1]-y,x) # weird matlab to python indexing..
     # print "x: " + str(center[0]) + ", y: " + str(center[1])
-    cv2.circle(img, center, 2, (0, 0, 255), -1)
+    cv2.circle(img, center, 4, (0, 0, 255), -1)
 
 cv2.imwrite("results/" + query_image_name + "_result_direct_matching.png",img)
 
@@ -36,10 +36,10 @@ for i in range(rows):
     center = (x, y)
     # center = (np.shape(img)[1]-y,x) # weird matlab to python indexing..
     # print "x: " + str(center[0]) + ", y: " + str(center[1])
-    cv2.circle(img, center, 2, (0, 0, 255), -1)
+    cv2.circle(img, center, 4, (0, 0, 255), -1)
 
 cv2.imwrite("results/" + query_image_name + "_result_image_retrieval.png",img)
 
 # if(benchmarking != "1"):
-    # os.system("open results/" + query_image_name + "_result_direct_matching.png")
-    # os.system("open results/" + query_image_name + "_result_image_retrieval.png")
+#     os.system("open results/" + query_image_name + "_result_direct_matching.png")
+#     os.system("open results/" + query_image_name + "_result_image_retrieval.png")
