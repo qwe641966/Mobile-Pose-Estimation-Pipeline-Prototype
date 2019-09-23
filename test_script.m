@@ -1,27 +1,43 @@
-t = importdata('results/arcore/pnp_ransac_translation_vector_direct.txt');
-quat = importdata('results/arcore/rotation_direct_matching_as_quaternion.txt');
-quat = [quat(4), quat(1), quat(2), quat(3)]; % because matlab does (w,x,y,z)
 points3D = importdata('results/arcore/3D_points_direct.txt');
-points3D = [points3D ones(size(points3D,1),1)];
+translation = importdata('results/arcore/pnp_ransac_translation_vector_direct.txt');
+rotation_quat = importdata('results/arcore/rotation_direct_matching_as_quaternion.txt');
+rotation_quat = rotation_quat';
+% qw, qx, qy, qz - here!
+rotation_matrix = quat2rotm([rotation_quat(4) rotation_quat(1) rotation_quat(2) rotation_quat(3)]);
 
-R = quat2rotm(quat);
+ar_core_poses = [];
 
-Rt = [R t];
+dinfo = dir('matlab_debug_data/ar_core_poses/poses/*.txt');
+for i = 1 : length(dinfo)
+%    dinfo(i).name
+   ar_core_poses = [ar_core_poses ; importdata(fullfile('matlab_debug_data/ar_core_poses/poses/', dinfo(i).name))];
+end
 
-Rt = [Rt ; 0 0 0 1];
+rt_points3D = [rotation_matrix translation ; [ 0 0 0 1 ]] * [points3D ones(size(points3D,1),1)]';
 
-points3D_Rt = Rt * points3D';
+ar_translation = [ar_core_poses(1,1) ; ar_core_poses(1,2) ; ar_core_poses(1,3)];
+% qw, qx, qy, qz - here!
+ar_quat = [ar_core_poses(1,7) ar_core_poses(1,4)  ar_core_poses(1,5) ar_core_poses(1,6)];
+ar_rotation_matrix = quat2rotm(ar_quat);
 
-% arcore [x:-0.097, y:0.052, z:-0.005], q:[x:0.03, y:-0.03, z:-0.72, w:-0.69]
-
-t_ar_core = [-0.097, 0.052, -0.005]';
-quat_ar_core = [-0.69, 0.03, -0.03, -0.72]; % matlab notation
-R_ar_core = quat2rotm(quat_ar_core);
-
-Rt_ar_core = [R_ar_core t_ar_core];
-Rt_ar_core = [Rt_ar_core ; 0 0 0 1];
-
-last_points = [inv(Rt_ar_core) * points3D_Rt]';
+ar_rt_points_3D = inv([ar_rotation_matrix ar_translation ; [ 0 0 0 1 ]]) * rt_points3D;
+ar_rt_points_3D = ar_rt_points_3D';
 
 figure;
-plot3(last_points(:,1),last_points(:,2),last_points(:,3),'*');
+% scatter3(ar_rt_points_3D(:,1),ar_rt_points_3D(:,2),ar_rt_points_3D(:,3),'.');
+% hold on;
+plotCamera('Location', ar_translation, 'Orientation', ar_rotation_matrix, 'Size', 0.1);
+hold on;
+plot3(0,0,0,'g*');
+hold on;
+
+for i = 2 : length(ar_core_poses) % since the first was used
+    pause
+    trans = [ar_core_poses(i,1) ; ar_core_poses(i,2) ; ar_core_poses(i,3)];
+    % qw, qx, qy, qz - here!
+    quat = [ar_core_poses(i,7) ar_core_poses(i,4)  ar_core_poses(i,5) ar_core_poses(i,6)];
+    rotation_matrix = quat2rotm(quat);
+    
+    plotCamera('Location', trans, 'Orientation', rotation_matrix, 'Size', 0.1);
+    hold on;
+end
