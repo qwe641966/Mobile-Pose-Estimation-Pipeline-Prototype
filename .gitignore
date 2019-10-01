@@ -10,3 +10,4 @@ results*
 *.pyc
 *.m~
 *.mat
+matlab_debug_data/data_ar/
