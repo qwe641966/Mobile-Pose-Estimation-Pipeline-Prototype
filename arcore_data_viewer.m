@@ -6,13 +6,24 @@ points = [points(:,1:3) ones(size(points,1),1)];
 
 correspondences = importdata('matlab_debug_data/data_ar/correspondences.txt');
 cpuImageCorrespondences = importdata('matlab_debug_data/data_ar/cpuImageCorrespondences.txt');
+
+correspondencesXY = correspondences(:,1:2);
 cpuImageCorrespondencesXY = cpuImageCorrespondences(:,1:2);
+
+% I1 = rgb2gray(imread('matlab_debug_data/data_ar/frame.jpg'));
+% I2 = rgb2gray(imread('matlab_debug_data/data_ar/cpuFrame.jpg'));
+% 
+% figure; ax = axes;
+% showMatchedFeatures(I1, I2, correspondencesXY(1:4,:), cpuImageCorrespondencesXY(1:4,:),'montage','Parent',ax);
+
+cpuCameraIntrinsics = importdata('matlab_debug_data/data_ar/cpuCameraIntrinsics.txt');
 
 posemtx_android_sensor = importdata('matlab_debug_data/data_ar/posemtx_android_sensor.txt');
 posemtx_oriented = importdata('matlab_debug_data/data_ar/posemtx_oriented.txt');
 posemtx_plain = importdata('matlab_debug_data/data_ar/posemtx_plain.txt');
 
 projmtx = importdata('matlab_debug_data/data_ar/projmtx.txt');
+projmtxFromFrame = importdata('matlab_debug_data/data_ar/projmtxFromFrame.txt');
 viewmtx = importdata('matlab_debug_data/data_ar/viewmtx.txt');
 
 ndc = projmtx * viewmtx * points';
@@ -24,26 +35,15 @@ y_screen = 2880 * ((1 - ndc(:,2)) / 2 );
 
 xy = [x_screen y_screen];
 
-[regParams,Bfit,ErrorStats]=absor(correspondences(:,1:2)', cpuImageCorrespondencesXY');
-
-cpuImageCorrespondencesXY = regParams.M * [correspondences(:,1:2) ones(size(correspondences,1),1)]';
-cpuImageCorrespondencesXY = cpuImageCorrespondencesXY';
-
-figure;
-scatter(correspondences(:,1),correspondences(:,2));
-
-figure;
-scatter(cpuImageCorrespondencesXY(:,1),cpuImageCorrespondencesXY(:,2));
-
-% restrict for testing
-% correspondences = correspondences(1:4,1:2); % or xy
-% cpuImageCorrespondencesXY = [x_screen*480/1440 , y_screen*640/2880];
-
-save('matlab_debug_data/data_ar/correspondencesXY.txt', 'correspondences', '-ascii', '-double');
 save('matlab_debug_data/data_ar/cpuImageCorrespondencesXY.txt', 'cpuImageCorrespondencesXY', '-ascii', '-double');
 
-% cancel the pose
-% points_raw = inv(posemtx) * points';
+% points = points(:,1:3)'; % only need (x,y,z) for the next steps
+% 
+% xy_cpuImage = cpuCameraIntrinsics * points;
+% xy_cpuImage = xy_cpuImage';
+% xy_cpuImage = xy_cpuImage ./ xy_cpuImage(:,3);
+% save('matlab_debug_data/data_ar/xy_cpuImage.txt', 'xy_cpuImage', '-ascii', '-double');
+
 
 t_posemtx_android_sensor = posemtx_android_sensor(1:3,4);
 R_posemtx_android_sensor = posemtx_android_sensor(1:3,1:3);
