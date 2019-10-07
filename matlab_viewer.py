@@ -20,3 +20,12 @@ for i in range(rows):
     cv2.circle(img, center, 3, (0, 0, 255), -1)
 
 cv2.imwrite("matlab_debug_data/data_ar/result.jpg",img)
+
+cpuCameraIntrinsics = np.loadtxt("matlab_debug_data/data_ar/cpuCameraIntrinsics.txt")
+opencv_2D3D = np.loadtxt("matlab_debug_data/data_ar/opencv_2D3D.txt")
+
+# verify pose
+(_, R, t, inliers) = cv2.solvePnPRansac(opencv_2D3D[:,2:5], opencv_2D3D[:,0:2], cpuCameraIntrinsics, None, iterationsCount = 500, confidence = 0.99, flags = cv2.SOLVEPNP_EPNP)
+R = cv2.Rodrigues(R)[0]
+
+pdb.set_trace()

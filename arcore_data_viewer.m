@@ -10,12 +10,6 @@ cpuImageCorrespondences = importdata('matlab_debug_data/data_ar/cpuImageCorrespo
 correspondencesXY = correspondences(:,1:2);
 cpuImageCorrespondencesXY = cpuImageCorrespondences(:,1:2);
 
-% I1 = rgb2gray(imread('matlab_debug_data/data_ar/frame.jpg'));
-% I2 = rgb2gray(imread('matlab_debug_data/data_ar/cpuFrame.jpg'));
-% 
-% figure; ax = axes;
-% showMatchedFeatures(I1, I2, correspondencesXY(1:4,:), cpuImageCorrespondencesXY(1:4,:),'montage','Parent',ax);
-
 cpuCameraIntrinsics = importdata('matlab_debug_data/data_ar/cpuCameraIntrinsics.txt');
 
 posemtx_android_sensor = importdata('matlab_debug_data/data_ar/posemtx_android_sensor.txt');
@@ -36,6 +30,24 @@ y_screen = 2880 * ((1 - ndc(:,2)) / 2 );
 xy = [x_screen y_screen];
 
 save('matlab_debug_data/data_ar/cpuImageCorrespondencesXY.txt', 'cpuImageCorrespondencesXY', '-ascii', '-double');
+
+% for open cv pnp
+opencv_2D3D = [cpuImageCorrespondencesXY points];
+save('matlab_debug_data/data_ar/cpuCameraIntrinsics.txt', 'cpuCameraIntrinsics', '-ascii', '-double');
+save('matlab_debug_data/data_ar/opencv_2D3D.txt', 'opencv_2D3D', '-ascii', '-double');
+
+cameraParams = cameraParameters('IntrinsicMatrix', cpuCameraIntrinsics');
+% worldLocation this is different from the one OpenCV returns. That is the
+% translation
+[worldOrientation, worldLocation] = estimateWorldCameraPose(opencv_2D3D(:,1:2),opencv_2D3D(:,3:5),cameraParams);
+
+pcshow(opencv_2D3D(:,3:5),'VerticalAxis','Y','VerticalAxisDir','down','MarkerSize',30);
+hold on
+plotCamera('Size',0.1,'Orientation',worldOrientation,'Location',worldLocation);
+xlabel('X');
+ylabel('Y');
+zlabel('Z');
+hold off
 
 % points = points(:,1:3)'; % only need (x,y,z) for the next steps
 % 
