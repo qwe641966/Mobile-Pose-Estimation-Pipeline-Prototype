@@ -38,7 +38,7 @@ save('matlab_debug_data/data_ar/opencv_2D3D.txt', 'opencv_2D3D', '-ascii', '-dou
 
 cameraParams = cameraParameters('IntrinsicMatrix', cpuCameraIntrinsics');
 % worldLocation this is different from the one OpenCV returns. That is the
-% translation
+% translation this is the location (i.e -R'*t)
 [worldOrientation, worldLocation] = estimateWorldCameraPose(opencv_2D3D(:,1:2),opencv_2D3D(:,3:5),cameraParams);
 
 pcshow(opencv_2D3D(:,3:5),'VerticalAxis','Y','VerticalAxisDir','down','MarkerSize',30);
