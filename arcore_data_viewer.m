@@ -1,32 +1,43 @@
 clear all;
+close all;
 
 cpuCameraIntrinsics = importdata('matlab_debug_data/cpuCameraIntrinsics.txt');
 cameraParams = cameraParameters('IntrinsicMatrix', cpuCameraIntrinsics');
 
-dinfo = dir('matlab_debug_data/data_ar/*.txt');
+dinfo = dir('matlab_debug_data/data_ar/cpuImageCorrespondences*.txt');
 all_3D_points = [];
 for i = 1 : length(dinfo)
     correspondence  = importdata(fullfile('matlab_debug_data/data_ar/', dinfo(i).name));
-    all_3D_points = [all_3D_points ; correspondence(:,3:5) ];
-    
-    [worldOrientation, worldLocation] = estimateWorldCameraPose(correspondence(:,1:2),correspondence(:,3:5),cameraParams);
-    
+    all_3D_points = [all_3D_points ; correspondence(:,3:5) ];    
 end
 
-pcshow(correspondence(:,3:5),'VerticalAxis','Y','VerticalAxisDir','down','MarkerSize',30);
+pcshow(all_3D_points,'VerticalAxis','Y','VerticalAxisDir','down','MarkerSize',30);
 xlabel('X');
 ylabel('Y');
 zlabel('Z');
 
 hold on
 
+%Calculating pose from correpondences
 for i = 1 : length(dinfo)
     correspondence  = importdata(fullfile('matlab_debug_data/data_ar/', dinfo(i).name));
-    
     [worldOrientation, worldLocation] = estimateWorldCameraPose(correspondence(:,1:2),correspondence(:,3:5),cameraParams);
     
-    pause(0.5);
+%     pause(0.5);
     plotCamera('Location', worldLocation, 'Orientation', worldOrientation, 'Size', 0.1);
+    hold on
+end
+
+%AR_Core poses
+dinfo = dir('matlab_debug_data/data_ar/displayOrientedPose_*.txt');
+for i = 1 : length(dinfo)
+	pose = importdata(fullfile('matlab_debug_data/data_ar/', dinfo(i).name));
+    
+    worldOrientation = pose(1:3, 1:3);
+    worldLocation = - worldOrientation' * pose(1:3, 4);
+    
+%     pause(0.5);
+    plotCamera('Location', worldLocation, 'Orientation', worldOrientation, 'Size', 0.1, 'Color', [0 , 1, 1]);
     hold on
 end
 
