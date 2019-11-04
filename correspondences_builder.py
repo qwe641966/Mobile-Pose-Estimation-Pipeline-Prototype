@@ -40,6 +40,8 @@ def get_good_matches(matches):
             good.append([m])
     return good
 
+print "Loading the 3D points.."
+
 points3D = np.empty((0, 4))
 points3D_text_file = database_dir+"/../sparse_model/points3D.txt"
 f = open(points3D_text_file, 'r')
@@ -111,9 +113,8 @@ for images_name in images_names:
     # get rid of keypoints that have no 3D point
     keypoints_xy_descriptors_3DpointId = keypoints_xy_descriptors_3DpointId[np.where(keypoints_xy_descriptors_3DpointId[:,130] !=-1)[0]]
     keypoints_xy_descriptors_3DpointId = keypoints_xy_descriptors_3DpointId.astype(float)
-    # each row: the 2D point and its SIFT descriptor and its 3D point id
+    # each row: the SIFT descriptor its 2D point and its 3D point id
     # each 2D point has one 3D point or none (-1)
-    os.system("mkdir "+database_dir+"/../points_correspondences/"+images_name.replace(" ","\\ "))
 
     keypoints_points3Dids = keypoints_xy_descriptors_3DpointId[:,130]
 
@@ -130,4 +131,4 @@ for images_name in images_names:
     correspondences = np.concatenate((keypoints_xy_descriptors_3DpointId_xyz[:,0:2], keypoints_xy_descriptors_3DpointId_xyz[:,131:134]), axis=1)
     correspondences = np.concatenate((keypoints_xy_descriptors_3DpointId_xyz[:,2:130], correspondences), axis=1)
 
-    np.savetxt(database_dir+"/../points_correspondences/"+images_name+"/correspondences.txt", correspondences)
+    np.savetxt(database_dir+"/../points_correspondences/"+images_name+"_correspondences.txt", correspondences)
