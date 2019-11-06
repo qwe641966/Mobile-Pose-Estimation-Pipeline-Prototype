@@ -2,8 +2,6 @@ clear all;
 
 % COLMAP
 colmap_3D_points = importdata('data/coop7/model_points3D.txt');
-iphoneCameraIntrinsics = importdata('intrinsics_matrices/iphone_intrinsics.txt');
-iphoneCameraParams = cameraParameters('IntrinsicMatrix', iphoneCameraIntrinsics');
 
 % ARCore - They load up in text file name order.
 dinfo = dir('data/coop7/arcore_data/correspondences/cpuImageCorrespondences*.txt');
@@ -18,7 +16,7 @@ figure
 pcshow(colmap_3D_points,'VerticalAxis','Y','VerticalAxisDir','down','MarkerSize', 20);
 hold on;
 
-% plot COLMAP cameras
+% plot COLMAP cameras and ARCore Poses
 dinfo = dir('data/coop7/colmap_ground_truth_data_poses/*.txt');
 for i = 1 : length(dinfo)
     pose_data  = importdata(fullfile('data/coop7/colmap_ground_truth_data_poses/', dinfo(i).name));
@@ -26,7 +24,13 @@ for i = 1 : length(dinfo)
     trans = pose_data(5:7,1);
     rotm = quat2rotm(quat');
     camera_location = -rotm' * trans;
-    plotCamera('Location', camera_location, 'Orientation', rotm, 'Size', 0.5);
+    
+    if(length(dinfo(i).name) > 19)
+        plotCamera('Location', camera_location, 'Orientation', rotm, 'Size', 0.3, 'Color', [1, 0, 0]);
+    else
+        plotCamera('Location', camera_location, 'Orientation', rotm, 'Size', 0.3, 'Color', [0, 0, 1]);
+    end
+    
     hold on
 end
 
@@ -51,7 +55,7 @@ xlabel('X');
 ylabel('Y');
 zlabel('Z');
 
-view(2);
+view(-100.7451,-9.9463);
 
 
 
