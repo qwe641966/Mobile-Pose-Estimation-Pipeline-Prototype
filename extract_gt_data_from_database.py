@@ -60,4 +60,4 @@ for i in range(len(image_names)):
 
     gt_pose = np.concatenate((ground_truth_rotation_quarternion, ground_truth_trans))
 
-    np.savetxt(data_dir+"/colmap_ground_truth_data_poses/"+fname.split(".")[0]+"gt_pose.txt", gt_pose)
+    np.savetxt(data_dir+"/colmap_ground_truth_data_poses/"+fname.split(".")[0]+"_gt_pose.txt", gt_pose)

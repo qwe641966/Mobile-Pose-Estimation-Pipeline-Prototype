@@ -1,61 +1,111 @@
 clear all;
 
-% COLMAP
-colmap_3D_points = importdata('data/coop7/model_points3D.txt');
+% -------
+% 
+% % COLMAP
+% colmap_3D_points = importdata('data/coop7/model_points3D.txt');
+% 
+% figure
+% 
+% pcshow(colmap_3D_points,'VerticalAxis','Y','VerticalAxisDir','down','MarkerSize', 20);
+% hold on;
+% 
+% % plot COLMAP poses (blue) and ARCore Poses (red)
+% dinfo = dir('data/coop7/colmap_ground_truth_data_poses/*.txt');
+% for i = 1 : length(dinfo)
+%     pose_data  = importdata(fullfile('data/coop7/colmap_ground_truth_data_poses/', dinfo(i).name));
+%     quat = pose_data(1:4,1);
+%     trans = pose_data(5:7,1);
+%     rotm = quat2rotm(quat');
+%     camera_location = -rotm' * trans;
+%     
+%     if(length(dinfo(i).name) > 19)
+%         fprintf('ARCore Pose %s  \n',dinfo(i).name)
+%         plotCamera('Location', camera_location, 'Orientation', rotm, 'Size', 0.3, 'Color', [1, 0, 0]);
+%     else
+%         fprintf('COLMAP pose %s  \n',dinfo(i).name)
+%         plotCamera('Location', camera_location, 'Orientation', rotm, 'Size', 0.3, 'Color', [0, 0, 1]);
+%     end
+%     
+%     hold on;
+% end
 
-% ARCore - They load up in text file name order.
-dinfo = dir('data/coop7/arcore_data/correspondences/cpuImageCorrespondences*.txt');
-ar_core_3D_points = [];
-for i = 1 : length(dinfo)
-    correspondence  = importdata(fullfile('data/coop7/arcore_data/correspondences/', dinfo(i).name));
-    ar_core_3D_points = [ar_core_3D_points ; correspondence(:,3:5) ];    
-end
+% plot3(0,0,0,'g*');
+% hold on;
+% x_axis = mArrow3([0 0 0],[6 0 0], 'color', 'red', 'stemWidth', 0.1);
+% hold on;
+% y_axis = mArrow3([0 0 0],[0 6 0], 'color', 'green', 'stemWidth', 0.1);
+% hold on;
+% z_axis = mArrow3([0 0 0],[0 0 6], 'color', 'blue', 'stemWidth', 0.1);
+% 
+% title('COLMAP and ARCore Poses');
+% xlabel('X');
+% ylabel('Y');
+% zlabel('Z');
+
+% -------
 
 figure
 
-pcshow(colmap_3D_points,'VerticalAxis','Y','VerticalAxisDir','down','MarkerSize', 20);
-hold on;
-
-% plot COLMAP cameras and ARCore Poses
-dinfo = dir('data/coop7/colmap_ground_truth_data_poses/*.txt');
+% ARCore Data.
+dinfo = dir('data/coop7/arcore_data/test_data/cpuImageCorrespondences*.txt');
+ar_core_3D_points = [];
 for i = 1 : length(dinfo)
-    pose_data  = importdata(fullfile('data/coop7/colmap_ground_truth_data_poses/', dinfo(i).name));
-    quat = pose_data(1:4,1);
-    trans = pose_data(5:7,1);
-    rotm = quat2rotm(quat');
-    camera_location = -rotm' * trans;
-    
-    if(length(dinfo(i).name) > 19)
-        plotCamera('Location', camera_location, 'Orientation', rotm, 'Size', 0.3, 'Color', [1, 0, 0]);
-    else
-        plotCamera('Location', camera_location, 'Orientation', rotm, 'Size', 0.3, 'Color', [0, 0, 1]);
-    end
-    
-    hold on
+    ar_core_correspondence  = importdata(fullfile('data/coop7/arcore_data/test_data/', dinfo(i).name));
+    ar_core_3D_points = [ar_core_3D_points ; ar_core_correspondence(:,3:5) ];    
 end
 
-% for i = 1 : length(camera_locations)
-%     loc = camera_locations(i,:);
-%     plot3(loc(1),loc(2),loc(3),'g*');
-%     hold on
-% end
+pcshow(ar_core_3D_points,'VerticalAxis','Y','VerticalAxisDir','down','MarkerSize', 20);
+hold on;
 
-% pcshow(ar_core_3D_points,'VerticalAxis','Y','VerticalAxisDir','down','MarkerSize', 30);
-% hold on;
-plot3(0,0,0,'g*');
-hold on;
-x_axis = mArrow3([0 0 0],[6 0 0], 'color', 'red', 'stemWidth', 0.1);
-hold on;
-y_axis = mArrow3([0 0 0],[0 6 0], 'color', 'green', 'stemWidth', 0.1);
-hold on;
-z_axis = mArrow3([0 0 0],[0 0 6], 'color', 'blue', 'stemWidth', 0.1);
+dinfo = dir('data/coop7/arcore_data/test_data/displayOrientedPose*.txt');
+for i = 1 : length(dinfo)
+    pose_data = importdata(fullfile('data/coop7/arcore_data/test_data/', dinfo(i).name));
+    rot = pose_data(1:3,1:3);
+    trans = pose_data(1:3,4);
+    camera_location = -rot' * trans;
+    
+    plotCamera('Location', camera_location, 'Orientation', rot, 'Size', 0.1, 'Color', [0, 1, 0]);
+    hold on;
+end
 
-title('Debug');
+dinfo = dir('data/coop7/arcore_data/test_data/cameraPose*.txt');
+for i = 1 : length(dinfo)
+    pose_data = importdata(fullfile('data/coop7/arcore_data/test_data/', dinfo(i).name));
+    rot = pose_data(1:3,1:3);
+    trans = pose_data(1:3,4);
+    camera_location = -rot' * trans;
+    
+    plotCamera('Location', camera_location, 'Orientation', rot, 'Size', 0.1, 'Color', [1, 1, 0]);
+    hold on;
+end
+
+dinfo = dir('data/coop7/arcore_data/test_data/sensorPose*.txt');
+for i = 1 : length(dinfo)
+    pose_data = importdata(fullfile('data/coop7/arcore_data/test_data/', dinfo(i).name));
+    rot = pose_data(1:3,1:3);
+    trans = pose_data(1:3,4);
+    camera_location = -rot' * trans;
+    
+    plotCamera('Location', camera_location, 'Orientation', rot, 'Size', 0.1, 'Color', [1, 0, 1]);
+    hold on;
+end
+
+cpuCameraIntrinsics = importdata('matlab_debug_data/cpuCameraIntrinsics.txt');
+cameraParams = cameraParameters('IntrinsicMatrix', cpuCameraIntrinsics');
+
+dinfo = dir('data/coop7/arcore_data/test_data/cpuImageCorrespondences*.txt');
+for i = 1 : length(dinfo)
+    correspondence  = importdata(fullfile('matlab_debug_data/data_ar/', dinfo(i).name));
+    [worldOrientation, worldLocation] = estimateWorldCameraPose(correspondence(:,1:2),correspondence(:,3:5),cameraParams);
+    
+    
+    plotCamera('Location', worldLocation, 'Orientation', worldOrientation, 'Size', 0.1, 'Color', [1, 1, 1], 'Label', dinfo(i).name);
+    hold on;
+end
+
+title('ARCore Poses and Map');
 xlabel('X');
 ylabel('Y');
 zlabel('Z');
-
-view(-100.7451,-9.9463);
-
-
 
