@@ -7,7 +7,7 @@ import os
 
 image = 'frame_1572625116.jpg'
 
-colmap_to_arcore_points2D = sio.loadmat('points2D.mat')
+colmap_to_arcore_points2D = sio.loadmat('points2D_frame_1572625116.mat')
 colmap_to_arcore_points2D = colmap_to_arcore_points2D['points2D']
 
 rows = np.shape(colmap_to_arcore_points2D)[0]
@@ -21,21 +21,22 @@ for i in range(rows):
     # print "x: " + str(center[0]) + ", y: " + str(center[1])
     cv2.circle(img, center, 4, (0, 0, 255), -1)
 
-cv2.imwrite("matlab_result_colmap_to_arcore.jpg",img)
-#
-# colmap_original_points2D = sio.loadmat('colmap_points2D_original.mat')
-# colmap_original_points2D = colmap_original_points2D['colmap_points2D']
-#
-# rows = np.shape(colmap_to_arcore_points2D)[0]
-# img = cv2.imread(image)
-#
-# for i in range(rows):
-#     x = int(colmap_to_arcore_points2D[i][0])
-#     y = int(colmap_to_arcore_points2D[i][1])
-#     center = (x, y)
-#     # center = (np.shape(img)[1]-y,x) # weird matlab to python indexing..
-#     # print "x: " + str(center[0]) + ", y: " + str(center[1])
-#     cv2.circle(img, center, 4, (0, 0, 255), -1)
-#
-# cv2.imwrite("matlab_result_colmap_original.jpg",img)
-#
+cv2.imwrite("frame_1572625116_result.jpg",img)
+
+image = 'frame_1572625114.jpg'
+
+colmap_to_arcore_points2D = sio.loadmat('points2D_frame_1572625114.mat')
+colmap_to_arcore_points2D = colmap_to_arcore_points2D['points2D']
+
+rows = np.shape(colmap_to_arcore_points2D)[0]
+img = cv2.imread(image)
+
+for i in range(rows):
+    x = int(colmap_to_arcore_points2D[i][0])
+    y = int(colmap_to_arcore_points2D[i][1])
+    center = (x, y)
+    # center = (np.shape(img)[1]-y,x) # weird matlab to python indexing..
+    # print "x: " + str(center[0]) + ", y: " + str(center[1])
+    cv2.circle(img, center, 4, (0, 0, 255), -1)
+
+cv2.imwrite("frame_1572625114_result.jpg",img)
