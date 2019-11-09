@@ -62,7 +62,7 @@ y_axis = mArrow3([0 0 0],[0 6 0], 'color', 'green', 'stemWidth', 0.1);
 hold on;
 z_axis = mArrow3([0 0 0],[0 0 6], 'color', 'blue', 'stemWidth', 0.1);
 
-title('COLMAP Points in ARCore reference frame for 1572625116');
+title('COLMAP Points in ARCore reference frame for 1572625139');
 xlabel('X');
 ylabel('Y');
 zlabel('Z');
@@ -81,49 +81,3 @@ points_2D_projected_for_ARCore_frame = points_2D_projected_for_ARCore_frame ./ p
 save('colmap_points2D_mine.mat', 'points_2D_projected_for_ARCore_frame');
 save('colmap_points2D_original.mat', 'colmap_points2D');
 
-% 
-% term = [colmap_pose * colmap_points3D']';
-% term = term(:,1:3);
-% my_colmap_2D_points = [cpuCameraIntrinsics * term']';
-% my_colmap_2D_points = my_colmap_2D_points ./ my_colmap_2D_points(:,3);
-% 
-% term = [colmap_pose * eye(4) * colmap_points3D']';
-% term = term(:,1:3);
-% my_colmap_2D_points_eye = [cpuCameraIntrinsics * term']';
-% my_colmap_2D_points_eye = my_colmap_2D_points_eye ./ my_colmap_2D_points_eye(:,3);
-% 
-% term = [inv(ar_core_pose) * colmap_pose * colmap_points3D']';
-% term = term(:,1:3);
-% 
-% points_2D_projected_for_ARCore_frame = [cpuCameraIntrinsics * term']';
-% points_2D_projected_for_ARCore_frame = points_2D_projected_for_ARCore_frame ./ points_2D_projected_for_ARCore_frame(:,3);
-% points_2D_projected_for_ARCore_frame = points_2D_projected_for_ARCore_frame(:,1:2);
-% 
-% save('points_2D_projected_for_ARCore_frame_1.mat', 'points_2D_projected_for_ARCore_frame');
-% 
-% term = [ar_core_pose * inv(colmap_pose) * colmap_points3D']';
-% term = term(:,1:3);
-% 
-% points_2D_projected_for_ARCore_frame = [cpuCameraIntrinsics * term']';
-% points_2D_projected_for_ARCore_frame = points_2D_projected_for_ARCore_frame ./ points_2D_projected_for_ARCore_frame(:,3);
-% points_2D_projected_for_ARCore_frame = points_2D_projected_for_ARCore_frame(:,1:2);
-% 
-% save('points_2D_projected_for_ARCore_frame_2.mat', 'points_2D_projected_for_ARCore_frame');
-% 
-% term = [inv(colmap_pose) * ar_core_pose * colmap_points3D']';
-% term = term(:,1:3);
-% 
-% points_2D_projected_for_ARCore_frame = [cpuCameraIntrinsics * term']';
-% points_2D_projected_for_ARCore_frame = points_2D_projected_for_ARCore_frame ./ points_2D_projected_for_ARCore_frame(:,3);
-% points_2D_projected_for_ARCore_frame = points_2D_projected_for_ARCore_frame(:,1:2);
-% 
-% save('points_2D_projected_for_ARCore_frame_3.mat', 'points_2D_projected_for_ARCore_frame');
-% 
-% term = [colmap_pose * inv(ar_core_pose) * colmap_points3D']';
-% term = term(:,1:3);
-% 
-% points_2D_projected_for_ARCore_frame = [cpuCameraIntrinsics * term']';
-% points_2D_projected_for_ARCore_frame = points_2D_projected_for_ARCore_frame ./ points_2D_projected_for_ARCore_frame(:,3);
-% points_2D_projected_for_ARCore_frame = points_2D_projected_for_ARCore_frame(:,1:2);
-% 
-% save('points_2D_projected_for_ARCore_frame_4.mat', 'points_2D_projected_for_ARCore_frame');

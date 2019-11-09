@@ -5,7 +5,7 @@ import sys
 import scipy.io as sio
 import os
 
-image = 'frame_1572625139.jpg'
+image = 'frame_1572625116.jpg'
 
 colmap_to_arcore_points2D = sio.loadmat('colmap_points2D_mine.mat')
 colmap_to_arcore_points2D = colmap_to_arcore_points2D['points_2D_projected_for_ARCore_frame']
