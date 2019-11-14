@@ -44,7 +44,7 @@ for i in range(len(image_names)):
             image_first_line = lines[i] # IMAGE_ID, QW, QX, QY, QZ, TX, TY, TZ, CAMERA_ID, NAME
             points2D_x_y_3Did = lines[i+1] # POINTS2D[] as (X, Y, POINT3D_ID)
             break
-
+    
     image_first_line = image_first_line.split(' ')
     qw = image_first_line[1]
     qx = image_first_line[2]

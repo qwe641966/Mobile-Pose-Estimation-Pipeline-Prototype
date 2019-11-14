@@ -5,9 +5,9 @@ import sys
 import scipy.io as sio
 import os
 
-image = 'frame_1572625116.jpg'
+image = 'frame_1573310727320.jpg'
 
-colmap_to_arcore_points2D = sio.loadmat('points2D_frame_1572625116.mat')
+colmap_to_arcore_points2D = sio.loadmat('points2D_frame_1573310727320.mat')
 colmap_to_arcore_points2D = colmap_to_arcore_points2D['points2D']
 
 rows = np.shape(colmap_to_arcore_points2D)[0]
@@ -21,11 +21,11 @@ for i in range(rows):
     # print "x: " + str(center[0]) + ", y: " + str(center[1])
     cv2.circle(img, center, 4, (0, 0, 255), -1)
 
-cv2.imwrite("frame_1572625116_result.jpg",img)
+cv2.imwrite("frame_1573310727320_result.jpg",img)
 
-image = 'frame_1572625114.jpg'
+image = 'frame_1573310727320.jpg'
 
-colmap_to_arcore_points2D = sio.loadmat('points2D_frame_1572625114.mat')
+colmap_to_arcore_points2D = sio.loadmat('points2D_frame_1573310727320_colmap.mat')
 colmap_to_arcore_points2D = colmap_to_arcore_points2D['points2D']
 
 rows = np.shape(colmap_to_arcore_points2D)[0]
@@ -39,4 +39,4 @@ for i in range(rows):
     # print "x: " + str(center[0]) + ", y: " + str(center[1])
     cv2.circle(img, center, 4, (0, 0, 255), -1)
 
-cv2.imwrite("frame_1572625114_result.jpg",img)
+cv2.imwrite("frame_1573310727320_result_colmap.jpg",img)
