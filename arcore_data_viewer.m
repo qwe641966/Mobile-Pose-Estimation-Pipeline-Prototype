@@ -1,6 +1,8 @@
 clear all;
 close all;
 
+confidence_threshold = 0.1;
+
 cpuCameraIntrinsics = importdata('matlab_debug_data/cpuCameraIntrinsics.txt');
 cameraParams = cameraParameters('IntrinsicMatrix', cpuCameraIntrinsics');
 
@@ -8,6 +10,8 @@ dinfo = dir('matlab_debug_data/data_ar/cpuImageCorrespondences*.txt');
 all_3D_points = [];
 for i = 1 : length(dinfo)
     correspondence  = importdata(fullfile('matlab_debug_data/data_ar/', dinfo(i).name));
+    
+    correspondence = correspondence((correspondence(:,6) > confidence_threshold) , :);
     all_3D_points = [all_3D_points ; correspondence(:,3:5) ];    
 end
 
